@@ -1,4 +1,4 @@
-# LGTM — The Catalog
+# LGTM
 
 A fully static web application that catalogs alternative meanings for the acronym LGTM. Generate a random interpretation, browse the full collection, filter by category and rarity, and share individual entries via permanent URLs.
 
