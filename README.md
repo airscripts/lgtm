@@ -8,7 +8,7 @@ Live at: https://lgtm.airscript.it
 
 ## Overview
 
-LGTM collects 107+ alternative meanings for "LGTM" (Looks Good To Me), organized by:
+LGTM collects hundreds alternative meanings for "LGTM" (Looks Good To Me), organized by:
 
 - **Rarity** — common, regular, rare, legendary (weighted random generation)
 - **Category** — funny, sarcastic, wholesome, dev, existential, corporate, chaotic
