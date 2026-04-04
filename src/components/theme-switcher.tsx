@@ -1,3 +1,4 @@
+import type { ReactElement } from 'react';
 import { useEffect, useState } from 'react';
 import { THEME_STORAGE_KEY } from '@/lib/config';
 
@@ -46,7 +47,7 @@ function IconMoon() {
   );
 }
 
-const THEMES: { value: Theme; icon: () => JSX.Element; label: string }[] = [
+const THEMES: { value: Theme; icon: () => ReactElement; label: string }[] = [
   { value: 'system', icon: IconSystem, label: 'System theme' },
   { value: 'light',  icon: IconSun,    label: 'Light theme' },
   { value: 'dark',   icon: IconMoon,   label: 'Dark theme' },
