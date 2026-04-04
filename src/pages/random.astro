@@ -1,23 +1,21 @@
 ---
-import BaseLayout from '@/layouts/base-layout.astro';
-import { getAllEntries, RARITY_WEIGHTS } from '@/lib/lgtm';
+import BaseLayout from "@/layouts/base-layout.astro";
+import { getAllEntries, RARITY_WEIGHTS } from "@/lib/lgtm";
 
 const entries = getAllEntries();
 const entriesJson = JSON.stringify(
-  entries.map((e) => ({ id: e.id, rarity: e.rarity }))
+  entries.map((e) => ({ id: e.id, rarity: e.rarity })),
 );
 const weightsJson = JSON.stringify(RARITY_WEIGHTS);
 ---
 
-<BaseLayout
-  title="LGTM"
-  description="Redirecting to a random LGTM meaning."
->
+<BaseLayout title="LGTM" description="Redirecting to a random LGTM meaning.">
   <div class="random-page">
     <div class="container">
       <p class="redirecting">Picking a random LGTM&hellip;</p>
       <noscript>
-        <p>JavaScript is required to pick a random entry.
+        <p>
+          JavaScript is required to pick a random entry.
           <a href="/browse">Browse all entries instead.</a>
         </p>
       </noscript>
@@ -31,7 +29,7 @@ const weightsJson = JSON.stringify(RARITY_WEIGHTS);
       var entries = JSON.parse(entriesJson);
       var weights = JSON.parse(weightsJson);
       if (!entries || entries.length === 0) {
-        window.location.replace('/browse');
+        window.location.replace("/browse");
         return;
       }
 
@@ -45,14 +43,14 @@ const weightsJson = JSON.stringify(RARITY_WEIGHTS);
         var w = weights[entries[i].rarity] || weights.common;
         rand -= w;
         if (rand <= 0) {
-          window.location.replace('/lgtm/' + entries[i].id);
+          window.location.replace("/lgtm/" + entries[i].id);
           return;
         }
       }
 
-      window.location.replace('/lgtm/' + entries[entries.length - 1].id);
+      window.location.replace("/lgtm/" + entries[entries.length - 1].id);
     } catch (err) {
-      window.location.replace('/browse');
+      window.location.replace("/browse");
     }
   })();
 </script>
@@ -71,7 +69,12 @@ const weightsJson = JSON.stringify(RARITY_WEIGHTS);
   }
 
   @keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.3; }
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.3;
+    }
   }
 </style>

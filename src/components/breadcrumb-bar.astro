@@ -11,70 +11,37 @@ interface Props {
 const { items } = Astro.props;
 ---
 
-<nav class="breadcrumb-bar" aria-label="Breadcrumb">
+<nav
+  class="border-b py-[0.625rem]"
+  style="background: var(--color-surface); border-color: var(--color-border);"
+  aria-label="Breadcrumb"
+>
   <div class="container">
-    <ol class="breadcrumb-list">
+    <ol class="list-none m-0 p-0 flex items-center flex-wrap gap-1">
       {items.map((item, i) => (
-        <li class="breadcrumb-item">
+        <li class="flex items-center gap-1">
           {item.href && i < items.length - 1 ? (
-            <a href={item.href} class="breadcrumb-link">{item.label}</a>
+            <a
+              href={item.href}
+              class="text-sm no-underline transition-colors duration-150"
+              style="color: var(--color-text-muted);"
+              onmouseover="this.style.color='var(--color-text)';"
+              onmouseout="this.style.color='var(--color-text-muted)';"
+            >{item.label}</a>
           ) : (
-            <span class="breadcrumb-current" aria-current={i === items.length - 1 ? 'page' : undefined}>
+            <span
+              class="text-sm font-medium"
+              style="color: var(--color-text);"
+              aria-current={i === items.length - 1 ? 'page' : undefined}
+            >
               {item.label}
             </span>
           )}
           {i < items.length - 1 && (
-            <span class="breadcrumb-sep" aria-hidden="true">/</span>
+            <span class="text-sm" style="color: var(--color-text-faint);" aria-hidden="true">/</span>
           )}
         </li>
       ))}
     </ol>
   </div>
 </nav>
-
-<style>
-  .breadcrumb-bar {
-    background: var(--color-surface);
-    border-bottom: 1px solid var(--color-border);
-    padding-block: 0.625rem;
-  }
-
-  .breadcrumb-list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 0.25rem;
-  }
-
-  .breadcrumb-item {
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-  }
-
-  .breadcrumb-link {
-    font-size: 0.875rem;
-    color: var(--color-text-muted);
-    text-decoration: none;
-    transition: color 0.15s;
-  }
-
-  .breadcrumb-link:hover {
-    color: var(--color-text);
-    text-decoration: none;
-  }
-
-  .breadcrumb-current {
-    font-size: 0.875rem;
-    color: var(--color-text);
-    font-weight: 500;
-  }
-
-  .breadcrumb-sep {
-    font-size: 0.875rem;
-    color: var(--color-text-faint);
-  }
-</style>

@@ -9,60 +9,36 @@ interface Props {
 
 const { category, size = 'md', href } = Astro.props;
 const label = CATEGORY_LABELS[category] ?? category;
+
+const sizeClasses = size === 'sm'
+  ? 'text-[0.6875rem] py-[0.2em] px-[0.55em]'
+  : 'text-[0.8125rem] py-[0.3em] px-[0.7em]';
+
+const categoryColors: Record<string, string> = {
+  funny:       '#f59e0b',
+  sarcastic:   '#ef4444',
+  wholesome:   '#10b981',
+  nerd:        '#6366f1',
+  existential: '#8b5cf6',
+  corporate:   '#0ea5e9',
+  chaotic:     '#f97316',
+};
+
+const clr = categoryColors[category];
+const badgeStyle = clr
+  ? `color: ${clr}; background: color-mix(in srgb, ${clr} 10%, var(--color-surface)); border-color: color-mix(in srgb, ${clr} 25%, transparent);`
+  : 'color: var(--color-text-muted); background: var(--color-surface-raised); border-color: var(--color-border);';
 ---
 
 {href ? (
-  <a href={href} class={`cat-badge size-${size} cat-${category}`}>{label}</a>
+  <a
+    href={href}
+    class={`inline-flex items-center font-medium rounded-md border no-underline transition-opacity duration-150 hover:opacity-80 ${sizeClasses}`}
+    style={badgeStyle}
+  >{label}</a>
 ) : (
-  <span class={`cat-badge size-${size} cat-${category}`}>{label}</span>
+  <span
+    class={`inline-flex items-center font-medium rounded-md border ${sizeClasses}`}
+    style={badgeStyle}
+  >{label}</span>
 )}
-
-<style>
-  .cat-badge {
-    display: inline-flex;
-    align-items: center;
-    font-weight: 500;
-    border-radius: 6px;
-    text-decoration: none;
-    transition: opacity 0.15s;
-    background: var(--color-surface-raised);
-    color: var(--color-text-muted);
-    border: 1px solid var(--color-border);
-  }
-
-  .cat-badge:hover {
-    opacity: 0.8;
-    text-decoration: none;
-    color: var(--color-text);
-  }
-
-  .size-sm {
-    font-size: 0.6875rem;
-    padding: 0.2em 0.55em;
-  }
-
-  .size-md {
-    font-size: 0.8125rem;
-    padding: 0.3em 0.7em;
-  }
-
-  .cat-funny     { --cat-clr: #f59e0b; }
-  .cat-sarcastic { --cat-clr: #ef4444; }
-  .cat-wholesome { --cat-clr: #10b981; }
-  .cat-nerd      { --cat-clr: #6366f1; }
-  .cat-existential { --cat-clr: #8b5cf6; }
-  .cat-corporate { --cat-clr: #0ea5e9; }
-  .cat-chaotic   { --cat-clr: #f97316; }
-
-  .cat-funny,
-  .cat-sarcastic,
-  .cat-wholesome,
-  .cat-nerd,
-  .cat-existential,
-  .cat-corporate,
-  .cat-chaotic {
-    color: var(--cat-clr);
-    background: color-mix(in srgb, var(--cat-clr) 10%, var(--color-surface));
-    border-color: color-mix(in srgb, var(--cat-clr) 25%, transparent);
-  }
-</style>

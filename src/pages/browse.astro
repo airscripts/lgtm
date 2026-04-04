@@ -10,49 +10,22 @@ const entries = getAllEntries();
   title="LGTM"
   description={`All ${entries.length} alternative meanings of LGTM, filterable by category, rarity, and searchable by keyword.`}
 >
-  <div class="browse-page">
+  <div class="py-10 pb-16">
     <div class="container">
-
-      <div class="page-header">
-        <h1 class="page-title">Browse all <span class="accent">LGTM</span> meanings</h1>
-        <p class="page-sub">
+      <div class="mb-10">
+        <h1
+          class="text-[clamp(1.75rem,5vw,2.5rem)] font-extrabold tracking-[-0.03em] mb-3 mt-0"
+          style="color: var(--color-text);"
+        >
+          Browse all <span style="font-family: var(--font-mono); color: var(--color-accent);">LGTM</span> meanings
+        </h1>
+        <p class="text-[1.0625rem] m-0 leading-relaxed" style="color: var(--color-text-muted);">
           {entries.length} entries across all categories and rarities.
           Filter, search, and find the perfect one for your PR.
         </p>
       </div>
 
       <BrowseFilters client:load entries={entries} />
-
     </div>
   </div>
 </BaseLayout>
-
-<style>
-  .browse-page {
-    padding-block: 2.5rem 4rem;
-  }
-
-  .page-header {
-    margin-bottom: 2.5rem;
-  }
-
-  .page-title {
-    font-size: clamp(1.75rem, 5vw, 2.5rem);
-    font-weight: 800;
-    letter-spacing: -0.03em;
-    color: var(--color-text);
-    margin: 0 0 0.75rem;
-  }
-
-  .accent {
-    font-family: var(--font-mono);
-    color: var(--color-accent);
-  }
-
-  .page-sub {
-    font-size: 1.0625rem;
-    color: var(--color-text-muted);
-    margin: 0;
-    line-height: 1.6;
-  }
-</style>

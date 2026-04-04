@@ -1,0 +1,50 @@
+---
+import BaseLayout from '@/layouts/base-layout.astro';
+---
+
+<BaseLayout
+  title="LGTM Entry Not Found | LGTM"
+  description="That LGTM entry doesn't exist — yet. Maybe you can add it."
+>
+  <div
+    class="flex flex-1 flex-col items-center justify-center text-center px-5 py-24"
+    style="background: var(--color-bg);"
+  >
+    <p
+      class="text-[0.6875rem] font-bold tracking-[0.22em] uppercase m-0 mb-4"
+      style="font-family: var(--font-mono); color: var(--color-text-faint);"
+    >LGTM</p>
+
+    <h1
+      class="text-[clamp(2rem,6vw,3rem)] font-extrabold tracking-[-0.03em] m-0 mb-4 leading-[1.1]"
+      style="color: var(--color-text);"
+    >
+      Entry not found
+    </h1>
+
+    <p
+      class="text-[1.0625rem] leading-[1.7] m-0 mb-10 max-w-[480px]"
+      style="color: var(--color-text-muted);"
+    >
+      This LGTM entry doesn't exist — yet.<br />
+      We currently have <strong style="color: var(--color-text);">250 meanings</strong> and we're always looking for more.
+      Think you have a good one? Contribute it!
+    </p>
+
+    <div class="flex flex-wrap justify-center gap-3 mb-10">
+      <a href="/random" class="btn btn-primary">Give me a random one</a>
+      <a href="/browse" class="btn btn-ghost">Browse all entries</a>
+    </div>
+
+    <p class="text-sm m-0" style="color: var(--color-text-faint);">
+      Got a creative alternative meaning for LGTM?{' '}
+      <a
+        href="https://github.com/airscripts/lgtm"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="font-medium"
+        style="color: var(--color-accent);"
+      >Contribute on GitHub &rarr;</a>
+    </p>
+  </div>
+</BaseLayout>

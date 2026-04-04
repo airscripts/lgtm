@@ -38,108 +38,158 @@ const totalWeight = Object.values(RARITY_WEIGHTS).reduce((a, b) => a + b, 0);
   title="LGTM"
   description="Generate a random alternative meaning for LGTM to use in your next pull request."
 >
-  <div class="hero-section">
-    <div class="container">
-      <div class="hero-content">
-        <div class="hero-head animate-up">
-          <h1 class="hero-title">
-            What does <span class="acronym-highlight">LGTM</span> mean today?
+  <!-- Hero -->
+  <div
+    class="min-h-[75vh] flex flex-col items-stretch relative"
+    style="background: var(--color-accent); padding-top: 3.75rem;"
+  >
+    <div class="container flex-1 flex items-center justify-center">
+      <div class="text-center w-full py-16 pb-12">
+        <div class="mb-10 animate-up">
+          <h1
+            class="text-[clamp(2.25rem,7vw,4rem)] font-extrabold tracking-[-0.03em] text-white m-0 mb-5 leading-[1.05]"
+          >
+            What does
+            <span
+              class="rounded-md px-[0.25em]"
+              style="font-family: var(--font-mono); color: rgba(255,255,255,0.85); background: rgba(255,255,255,0.12);"
+            >LGTM</span>
+            mean today?
           </h1>
-          <p class="hero-sub">
+          <p
+            class="text-[clamp(1rem,2.5vw,1.2rem)] text-white/80 max-w-[540px] mx-auto leading-[1.65]"
+          >
             Creative, shareable alternative meanings for the classic code review
             acronym. Rarity-weighted fun, ready to paste in your next PR.
           </p>
         </div>
 
-        <div class="hero-cta animate-up-delay-1">
-          <a href="/random" class="btn btn-hero">Surprise Me!</a>
-          <div class="hero-links">
-            <a href="/browse" class="hero-link"
-              >Browse all {totalEntries} entries &rarr;</a
-            >
-            <a href="/categories" class="hero-link">View by category &rarr;</a>
+        <div class="flex flex-col items-center gap-6 animate-up-delay-1">
+          <a
+            href="/random"
+            class="inline-flex items-center gap-2 py-4 px-10 text-[1.125rem] font-bold rounded-xl bg-white no-underline border-none cursor-pointer transition-[transform,box-shadow,background] duration-150 tracking-[-0.01em]"
+            style="color: var(--color-accent); box-shadow: 0 4px 24px rgba(0,0,0,0.18);"
+            onmouseover="this.style.background='#f0eeff';this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 32px rgba(0,0,0,0.22)';"
+            onmouseout="this.style.background='white';this.style.transform='';this.style.boxShadow='0 4px 24px rgba(0,0,0,0.18)';"
+          >Surprise Me!</a>
+          <div class="flex gap-8 flex-wrap justify-center">
+            <a
+              href="/browse"
+              class="text-[0.9375rem] no-underline pb-[2px] border-b transition-[color,border-color] duration-150"
+              style="color: rgba(255,255,255,0.7); border-color: rgba(255,255,255,0.3);"
+              onmouseover="this.style.color='white';this.style.borderColor='rgba(255,255,255,0.7)';"
+              onmouseout="this.style.color='rgba(255,255,255,0.7)';this.style.borderColor='rgba(255,255,255,0.3)';"
+            >Browse all {totalEntries} entries &rarr;</a>
+            <a
+              href="/categories"
+              class="text-[0.9375rem] no-underline pb-[2px] border-b transition-[color,border-color] duration-150"
+              style="color: rgba(255,255,255,0.7); border-color: rgba(255,255,255,0.3);"
+              onmouseover="this.style.color='white';this.style.borderColor='rgba(255,255,255,0.7)';"
+              onmouseout="this.style.color='rgba(255,255,255,0.7)';this.style.borderColor='rgba(255,255,255,0.3)';"
+            >View by category &rarr;</a>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="scroll-hint" aria-hidden="true">
-      <span class="scroll-hint-label">scroll</span>
-      <svg
-        class="scroll-hint-arrow"
-        width="16"
-        height="16"
-        viewBox="0 0 16 16"
-        fill="none"
-      >
-        <path
-          d="M8 3v10M3 9l5 5 5-5"
-          stroke="currentColor"
-          stroke-width="1.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"></path>
+    <!-- scroll hint -->
+    <div
+      class="flex flex-col items-center gap-[0.375rem] pb-8 text-white/50"
+      style="animation: scroll-bounce 2s ease-in-out infinite;"
+      aria-hidden="true"
+    >
+      <span
+        class="text-[0.6875rem] tracking-[0.12em] uppercase"
+        style="font-family: var(--font-mono);"
+      >scroll</span>
+      <svg class="w-4 h-4" viewBox="0 0 16 16" fill="none">
+        <path d="M8 3v10M3 9l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
       </svg>
     </div>
   </div>
 
-  <div class="how-section page-content">
+  <!-- How It Works -->
+  <div
+    class="py-14 border-b page-content"
+    style="background: var(--color-surface); border-color: var(--color-border);"
+  >
     <div class="container">
-      <h2 class="section-title">How It Works</h2>
-      <ol class="how-steps">
-        <li class="how-step">
-          <span class="how-number">1</span>
-          <div class="how-content">
-            <strong class="how-heading">Click "Surprise Me!"</strong>
-            <p class="how-text">
-              Hit the button and let the rarity gods decide your fate.
-            </p>
-          </div>
-        </li>
-        <li class="how-step">
-          <span class="how-number">2</span>
-          <div class="how-content">
-            <strong class="how-heading">See a random meaning</strong>
-            <p class="how-text">
-              Could be common, could be legendary. No two PRs are alike.
-            </p>
-          </div>
-        </li>
-        <li class="how-step">
-          <span class="how-number">3</span>
-          <div class="how-content">
-            <strong class="how-heading">Copy &amp; paste into your PR</strong>
-            <p class="how-text">
-              Drop it in as your review comment. Watch your team's reaction.
-            </p>
-          </div>
-        </li>
+      <h2
+        class="text-[clamp(1.25rem,3vw,1.625rem)] font-bold tracking-[-0.02em] m-0 mb-7"
+        style="color: var(--color-text);"
+      >How It Works</h2>
+      <ol
+        class="list-none m-0 mb-4 p-0 grid gap-4"
+        style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));"
+      >
+        {[
+          { n: '1', heading: 'Click "Surprise Me!"', text: 'Hit the button and let the rarity gods decide your fate.' },
+          { n: '2', heading: 'See a random meaning',  text: 'Could be common, could be legendary. No two PRs are alike.' },
+          { n: '3', heading: 'Copy & paste into your PR', text: "Drop it in as your review comment. Watch your team's reaction." },
+        ].map(({ n, heading, text }) => (
+          <li
+            class="flex items-start gap-4 p-5 rounded-xl border"
+            style="background: var(--color-surface-raised); border-color: var(--color-border);"
+          >
+            <span
+              class="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-sm font-extrabold text-white"
+              style="background: var(--color-accent); font-family: var(--font-mono);"
+            >{n}</span>
+            <div class="flex flex-col gap-1">
+              <strong class="text-[0.9375rem] font-bold" style="color: var(--color-text);">{heading}</strong>
+              <p class="text-sm m-0 leading-[1.55]" style="color: var(--color-text-muted);">{text}</p>
+            </div>
+          </li>
+        ))}
       </ol>
-      <p class="how-hint">
+      <p class="text-[0.8125rem] m-0 italic" style="color: var(--color-text-faint);">
         Rarity adds extra fun: the lower the odds, the better the story.
       </p>
     </div>
   </div>
 
-  <div class="stats-bar">
+  <!-- Stats Bar -->
+  <div
+    class="border-b py-7"
+    style="background: var(--color-surface); border-color: var(--color-border);"
+  >
     <div class="container">
-      <dl class="stats-list">
-        <div class="stat">
-          <dt class="stat-label">meanings collected</dt>
-          <dd class="stat-value">
+      <dl class="flex items-center justify-center gap-4 m-0 p-0 flex-wrap">
+        <div class="flex flex-col items-center gap-[0.10rem] px-10 max-sm:px-5">
+          <dt
+            class="text-[0.75rem] font-semibold tracking-[0.06em] uppercase"
+            style="color: var(--color-text-faint);"
+          >meanings collected</dt>
+          <dd
+            class="text-[2rem] font-extrabold m-0 tracking-[-0.03em]"
+            style="color: var(--color-text); font-variant-numeric: tabular-nums;"
+          >
             <CountUp client:visible to={totalEntries} />
           </dd>
         </div>
-        <div class="stat-divider" aria-hidden="true"></div>
-        <div class="stat">
-          <dt class="stat-label">flavour categories</dt>
-          <dd class="stat-value">
+        <div class="w-px h-10 flex-shrink-0 max-sm:hidden max-[900px]:hidden" style="background: var(--color-border);"></div>
+        <div class="flex flex-col items-center gap-[0.10rem] px-10 max-sm:px-5">
+          <dt
+            class="text-[0.75rem] font-semibold tracking-[0.06em] uppercase"
+            style="color: var(--color-text-faint);"
+          >flavour categories</dt>
+          <dd
+            class="text-[2rem] font-extrabold m-0 tracking-[-0.03em]"
+            style="color: var(--color-text); font-variant-numeric: tabular-nums;"
+          >
             <CountUp client:visible to={totalCategories} duration={900} />
           </dd>
         </div>
-        <div class="stat-divider" aria-hidden="true"></div>
-        <div class="stat">
-          <dt class="stat-label">rare &amp; hilarious</dt>
-          <dd class="stat-value stat-legendary">
+        <div class="w-px h-10 flex-shrink-0 max-sm:hidden max-[900px]:hidden" style="background: var(--color-border);"></div>
+        <div class="flex flex-col items-center gap-[0.10rem] px-10 max-sm:px-5">
+          <dt
+            class="text-[0.75rem] font-semibold tracking-[0.06em] uppercase"
+            style="color: var(--color-text-faint);"
+          >rare &amp; hilarious</dt>
+          <dd
+            class="text-[2rem] font-extrabold m-0 tracking-[-0.03em]"
+            style="color: var(--color-legendary); font-variant-numeric: tabular-nums;"
+          >
             <CountUp client:visible to={legendaryCount} duration={1100} />
           </dd>
         </div>
@@ -147,77 +197,122 @@ const totalWeight = Object.values(RARITY_WEIGHTS).reduce((a, b) => a + b, 0);
     </div>
   </div>
 
-  <div class="facts-section">
+  <!-- A Brief History -->
+  <div class="py-16">
     <div class="container">
-      <h2 class="section-title">A Brief History</h2>
-      <div class="facts-strip">
+      <h2
+        class="text-[clamp(1.25rem,3vw,1.625rem)] font-bold tracking-[-0.02em] m-0 mb-7"
+        style="color: var(--color-text);"
+      >A Brief History</h2>
+      <div class="history-grid grid gap-4">
         {FACTS.map((fact, i) => (
-          <div class={`fact-card${i >= 3 ? ' fact-card-wide' : ''}`}>
-            <span class="fact-year">{fact.year}</span>
-            <p class="fact-text">{fact.text}</p>
+          <div
+            class={`${i >= 3 ? 'col-span-3' : 'col-span-2'} flex flex-col gap-3 rounded-xl border p-6 transition-[border-color,transform] duration-150`}
+            style="background: var(--color-surface); border-color: var(--color-border);"
+            onmouseover="this.style.borderColor='color-mix(in srgb, var(--color-accent) 40%, var(--color-border))';this.style.transform='translateY(-1px)';"
+            onmouseout="this.style.borderColor='var(--color-border)';this.style.transform='';"
+          >
+            <span
+              class="text-[0.8125rem] font-bold tracking-[0.06em]"
+              style="font-family: var(--font-mono); color: var(--color-accent);"
+            >{fact.year}</span>
+            <p class="text-[0.9375rem] m-0 leading-relaxed" style="color: var(--color-text-muted);">{fact.text}</p>
           </div>
         ))}
       </div>
     </div>
   </div>
 
-  <div class="highlights-section">
+  <!-- Explore By Category -->
+  <div
+    class="py-16 border-t"
+    style="background: var(--color-surface); border-color: var(--color-border);"
+  >
     <div class="container">
-      <h2 class="section-title">Explore By Category</h2>
-      <div class="highlights-grid">
-        {
-          categories.map((cat) => (
-            <a href={`/categories/${cat.name}`} class="highlight-card">
-              <div class="highlight-card-top">
-                <CategoryBadge category={cat.name} size="md" />
-                <span class="highlight-count">{cat.count}</span>
-              </div>
-              <span class="highlight-tagline">{cat.tagline}</span>
-            </a>
-          ))
-        }
+      <h2
+        class="text-[clamp(1.25rem,3vw,1.625rem)] font-bold tracking-[-0.02em] m-0 mb-7"
+        style="color: var(--color-text);"
+      >Explore By Category</h2>
+      <div class="grid gap-3" style="grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));">
+        {categories.map((cat) => (
+          <a
+            href={`/categories/${cat.name}`}
+            class="flex flex-col gap-2 py-5 px-5 rounded-xl border no-underline transition-[transform,box-shadow,border-color] duration-150"
+            style="background: var(--color-surface-raised); border-color: var(--color-border);"
+            onmouseover="this.style.transform='translateY(-2px)';this.style.borderColor='var(--color-accent)';this.style.boxShadow='0 4px 16px color-mix(in srgb, var(--color-accent) 10%, transparent)';"
+            onmouseout="this.style.transform='';this.style.borderColor='var(--color-border)';this.style.boxShadow='';"
+          >
+            <div class="flex items-center justify-between gap-2">
+              <CategoryBadge category={cat.name} size="md" />
+              <span
+                class="text-[0.8125rem] font-semibold"
+                style="color: var(--color-text-faint); font-variant-numeric: tabular-nums;"
+              >{cat.count}</span>
+            </div>
+            <span class="text-[0.8125rem] italic" style="color: var(--color-text-muted);">{cat.tagline}</span>
+          </a>
+        ))}
       </div>
     </div>
   </div>
 
-  <div class="rarity-section">
+  <!-- Rarity Tiers -->
+  <div class="py-16 border-t" style="border-color: var(--color-border);">
     <div class="container">
-      <h2 class="section-title">Rarity Tiers</h2>
-      <p class="rarity-intro">
+      <h2
+        class="text-[clamp(1.25rem,3vw,1.625rem)] font-bold tracking-[-0.02em] m-0 mb-2"
+        style="color: var(--color-text);"
+      >Rarity Tiers</h2>
+      <p
+        class="text-[0.9375rem] max-w-[560px] leading-relaxed m-0 mb-7"
+        style="color: var(--color-text-muted);"
+      >
         Every meaning has a rarity. The draw is weighted: common ones show up
         more often, legendary ones are genuinely hard to land.
       </p>
-      <div class="rarity-grid">
-        {
-          RARITIES.map((r) => (
-            <div class={`rarity-card ${r.badgeClass}`}>
-              <div class="rarity-card-top">
-                <span class="rarity-label">{r.label}</span>
-                <span class="rarity-odds">
-                  {Math.round((r.weight / totalWeight) * 100)}%
-                </span>
-              </div>
-              <p class="rarity-tagline">{r.tagline}</p>
+      <div class="grid gap-[0.875rem]" style="grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));">
+        {RARITIES.map((r) => (
+          <div
+            class={`${r.badgeClass} py-5 px-6 rounded-xl flex flex-col gap-[0.375rem] transition-transform duration-150 hover:-translate-y-px`}
+          >
+            <div class="flex items-baseline justify-between gap-2">
+              <span class="text-base font-bold tracking-[-0.01em]">{r.label}</span>
+              <span
+                class="text-[0.8125rem] font-bold opacity-70"
+                style="font-family: var(--font-mono);"
+              >{Math.round((r.weight / totalWeight) * 100)}%</span>
             </div>
-          ))
-        }
+            <p class="text-sm m-0 italic" style="color: var(--color-text-muted);">{r.tagline}</p>
+          </div>
+        ))}
       </div>
     </div>
   </div>
 
-  <div class="lucky-section">
+  <!-- Feeling Lucky CTA -->
+  <div
+    class="py-20 border-t"
+    style="background: var(--color-surface); border-color: var(--color-border);"
+  >
     <div class="container">
-      <div class="lucky-inner">
-        <h2 class="lucky-title">Feeling Lucky?</h2>
-        <p class="lucky-sub">
+      <div class="text-center max-w-[560px] mx-auto">
+        <h2
+          class="text-[clamp(1.5rem,4vw,2.25rem)] font-extrabold tracking-[-0.03em] m-0 mb-4"
+          style="color: var(--color-text);"
+        >Feeling Lucky?</h2>
+        <p class="text-base leading-[1.65] m-0 mb-8" style="color: var(--color-text-muted);">
           Every spin is different. Share a legendary with your team. Paste a
           chaotic one into a serious PR. Make code review weird again.
         </p>
-        <div class="lucky-actions">
-          <a href="/random" class="btn btn-primary btn-large">Surprise Me!</a>
-          <a href="/browse" class="btn btn-ghost btn-large"
-            >Browse all entries</a
-          >
+        <div class="flex justify-center gap-4 flex-wrap max-sm:flex-col max-sm:items-center">
+          <a
+            href="/random"
+            class="btn btn-primary py-[0.875rem] px-8 text-base rounded-[10px] max-sm:w-full max-sm:max-w-[280px] max-sm:justify-center"
+          >Surprise Me!</a>
+          <a
+            href="/browse"
+            class="btn btn-ghost py-[0.875rem] px-8 text-base rounded-[10px] max-sm:w-full max-sm:max-w-[280px] max-sm:justify-center"
+          >Browse all entries</a>
         </div>
       </div>
     </div>
@@ -225,539 +320,15 @@ const totalWeight = Object.values(RARITY_WEIGHTS).reduce((a, b) => a + b, 0);
 </BaseLayout>
 
 <style>
-  .hero-section {
-    min-height: 75vh;
-    background: var(--color-accent);
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    position: relative;
-    padding-top: 3.75rem;
-  }
-
-  .hero-section .container {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .hero-content {
-    text-align: center;
-    padding-block: 4rem 3rem;
-    width: 100%;
-  }
-
-  .hero-head {
-    margin-bottom: 2.5rem;
-  }
-
-  .hero-title {
-    font-size: clamp(2.25rem, 7vw, 4rem);
-    font-weight: 800;
-    letter-spacing: -0.03em;
-    color: #fff;
-    margin: 0 0 1.25rem;
-    line-height: 1.05;
-  }
-
-  .acronym-highlight {
-    font-family: var(--font-mono);
-    color: rgba(255, 255, 255, 0.85);
-    background: rgba(255, 255, 255, 0.12);
-    padding: 0 0.25em;
-    border-radius: 6px;
-  }
-
-  .hero-sub {
-    font-size: clamp(1rem, 2.5vw, 1.2rem);
-    color: rgba(255, 255, 255, 0.8);
-    max-width: 540px;
-    margin-inline: auto;
-    line-height: 1.65;
-  }
-
-  .hero-cta {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1.5rem;
-  }
-
-  .btn-hero {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 1rem 2.5rem;
-    font-size: 1.125rem;
-    font-weight: 700;
-    border-radius: 12px;
-    background: #fff;
-    color: var(--color-accent);
-    text-decoration: none;
-    border: none;
-    cursor: pointer;
-    transition:
-      transform 0.15s ease,
-      box-shadow 0.15s ease,
-      background 0.15s ease;
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.18);
-    letter-spacing: -0.01em;
-  }
-
-  .btn-hero:hover {
-    background: #f0eeff;
-    transform: translateY(-2px);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.22);
-    text-decoration: none;
-    color: var(--color-accent);
-  }
-
-  .btn-hero:active {
-    transform: translateY(0);
-  }
-
-  .hero-links {
-    display: flex;
-    gap: 2rem;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  .hero-link {
-    font-size: 0.9375rem;
-    color: rgba(255, 255, 255, 0.7);
-    text-decoration: none;
-    padding-bottom: 2px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-    transition:
-      color 0.15s,
-      border-color 0.15s;
-  }
-
-  .hero-link:hover {
-    color: #fff;
-    border-color: rgba(255, 255, 255, 0.7);
-    text-decoration: none;
-  }
-
-  .scroll-hint {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.375rem;
-    padding-bottom: 2rem;
-    color: rgba(255, 255, 255, 0.5);
-    animation: scroll-bounce 2s ease-in-out infinite;
-  }
-
-  .scroll-hint-label {
-    font-size: 0.6875rem;
-    font-family: var(--font-mono);
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-  }
-
-  .scroll-hint-arrow {
-    width: 16px;
-    height: 16px;
-  }
-
-  @keyframes scroll-bounce {
-    0%,
-    100% {
-      transform: translateY(0);
-      opacity: 0.5;
-    }
-    50% {
-      transform: translateY(4px);
-      opacity: 0.8;
-    }
-  }
-
-  .how-section {
-    padding-block: 3.5rem;
-    border-bottom: 1px solid var(--color-border);
-    background: var(--color-surface);
-  }
-
-  .section-title {
-    font-size: clamp(1.25rem, 3vw, 1.625rem);
-    font-weight: 700;
-    color: var(--color-text);
-    margin: 0 0 1.75rem;
-    letter-spacing: -0.02em;
-  }
-
-  .how-steps {
-    list-style: none;
-    margin: 0 0 1rem;
-    padding: 0;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 1rem;
-  }
-
-  .how-step {
-    display: flex;
-    align-items: flex-start;
-    gap: 1rem;
-    padding: 1.25rem;
-    background: var(--color-surface-raised);
-    border: 1px solid var(--color-border);
-    border-radius: 12px;
-  }
-
-  .how-number {
-    flex-shrink: 0;
-    width: 2rem;
-    height: 2rem;
-    border-radius: 50%;
-    background: var(--color-accent);
-    color: #fff;
-    font-size: 0.875rem;
-    font-weight: 800;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: var(--font-mono);
-  }
-
-  .how-content {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-  }
-
-  .how-heading {
-    font-size: 0.9375rem;
-    font-weight: 700;
-    color: var(--color-text);
-  }
-
-  .how-text {
-    font-size: 0.875rem;
-    color: var(--color-text-muted);
-    line-height: 1.55;
-    margin: 0;
-  }
-
-  .how-hint {
-    font-size: 0.8125rem;
-    color: var(--color-text-faint);
-    margin: 0;
-    font-style: italic;
-  }
-
-  .stats-bar {
-    border-block: 1px solid var(--color-border);
-    background: var(--color-surface);
-    padding-block: 1.75rem;
-  }
-
-  .stats-list {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
-    margin: 0;
-    padding: 0;
-    flex-wrap: wrap;
-  }
-
-  .stat {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.10rem;
-    padding-inline: 2.5rem;
-  }
-
-  .stat-divider {
-    width: 1px;
-    height: 2.5rem;
-    background: var(--color-border);
-    flex-shrink: 0;
-  }
-
-  .stat-label {
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--color-text-faint);
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-  }
-
-  .stat-value {
-    font-size: 2rem;
-    font-weight: 800;
-    color: var(--color-text);
-    font-variant-numeric: tabular-nums;
-    letter-spacing: -0.03em;
-    margin: 0;
-  }
-
-  .stat-legendary {
-    color: var(--color-legendary);
-  }
-
-  .facts-section {
-    padding-block: 4rem;
-  }
-
-  .facts-strip {
-    display: grid;
+  .history-grid {
     grid-template-columns: repeat(6, 1fr);
-    gap: 1rem;
   }
-
-  .fact-card {
-    grid-column: span 2;
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: 12px;
-    padding: 1.5rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    transition:
-      border-color 0.15s,
-      transform 0.15s;
-  }
-
-  .fact-card-wide {
-    grid-column: span 3;
-  }
-
-  .fact-card:hover {
-    border-color: color-mix(
-      in srgb,
-      var(--color-accent) 40%,
-      var(--color-border)
-    );
-    transform: translateY(-1px);
-  }
-
-  .fact-year {
-    font-family: var(--font-mono);
-    font-size: 0.8125rem;
-    font-weight: 700;
-    color: var(--color-accent);
-    letter-spacing: 0.06em;
-  }
-
-  .fact-text {
-    font-size: 0.9375rem;
-    color: var(--color-text-muted);
-    line-height: 1.6;
-    margin: 0;
-  }
-
-  .highlights-section {
-    padding-block: 4rem;
-    background: var(--color-surface);
-    border-top: 1px solid var(--color-border);
-  }
-
-  .highlights-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 0.75rem;
-  }
-
-  .highlight-card {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    padding: 1.25rem 1.25rem;
-    background: var(--color-surface-raised);
-    border: 1px solid var(--color-border);
-    border-radius: 12px;
-    text-decoration: none;
-    transition:
-      transform 0.15s,
-      box-shadow 0.15s,
-      border-color 0.15s;
-  }
-
-  .highlight-card:hover {
-    transform: translateY(-2px);
-    border-color: var(--color-accent);
-    box-shadow: 0 4px 16px
-      color-mix(in srgb, var(--color-accent) 10%, transparent);
-    text-decoration: none;
-  }
-
-  .highlight-card-top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.5rem;
-  }
-
-  .highlight-count {
-    font-size: 0.8125rem;
-    font-weight: 600;
-    color: var(--color-text-faint);
-    font-variant-numeric: tabular-nums;
-  }
-
-  .highlight-tagline {
-    font-size: 0.8125rem;
-    color: var(--color-text-muted);
-    font-style: italic;
-  }
-
-  .rarity-section {
-    padding-block: 4rem;
-    border-top: 1px solid var(--color-border);
-  }
-
-  .rarity-intro {
-    font-size: 0.9375rem;
-    color: var(--color-text-muted);
-    max-width: 560px;
-    line-height: 1.6;
-    margin: -0.75rem 0 1.75rem;
-  }
-
-  .rarity-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 0.875rem;
-  }
-
-  .rarity-card {
-    padding: 1.25rem 1.5rem;
-    border-radius: 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 0.375rem;
-    transition: transform 0.15s;
-  }
-
-  .rarity-card:hover {
-    transform: translateY(-1px);
-  }
-
-  .rarity-card-top {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 0.5rem;
-  }
-
-  .rarity-label {
-    font-size: 1rem;
-    font-weight: 700;
-    letter-spacing: -0.01em;
-  }
-
-  .rarity-odds {
-    font-family: var(--font-mono);
-    font-size: 0.8125rem;
-    font-weight: 700;
-    opacity: 0.7;
-  }
-
-  .rarity-tagline {
-    font-size: 0.875rem;
-    color: var(--color-text-muted);
-    margin: 0;
-    font-style: italic;
-  }
-
-  .lucky-section {
-    padding-block: 5rem;
-    border-top: 1px solid var(--color-border);
-    background: var(--color-surface);
-  }
-
-  .lucky-inner {
-    text-align: center;
-    max-width: 560px;
-    margin-inline: auto;
-  }
-
-  .lucky-title {
-    font-size: clamp(1.5rem, 4vw, 2.25rem);
-    font-weight: 800;
-    color: var(--color-text);
-    margin: 0 0 1rem;
-    letter-spacing: -0.03em;
-  }
-
-  .lucky-sub {
-    font-size: 1rem;
-    color: var(--color-text-muted);
-    line-height: 1.65;
-    margin: 0 0 2rem;
-  }
-
-  .lucky-actions {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-    flex-wrap: wrap;
-  }
-
-  .btn-large {
-    padding: 0.875rem 2rem;
-    font-size: 1rem;
-    border-radius: 10px;
-  }
-
-  @media (max-width: 640px) {
-    .hero-section {
-      padding-top: 3.75rem;
-    }
-
-    .hero-content {
-      padding-block: 3rem 2.5rem;
-    }
-
-    .facts-strip {
+  @media (max-width: 639px) {
+    .history-grid {
       grid-template-columns: 1fr;
     }
-
-    .fact-card,
-    .fact-card-wide {
-      grid-column: span 1;
-    }
-
-    .stat {
-      padding-inline: 1.25rem;
-    }
-
-    .stat-divider {
-      display: none;
-    }
-
-    .lucky-actions {
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .btn-large {
-      width: 100%;
-      max-width: 280px;
-      justify-content: center;
-    }
-  }
-
-  @media (min-width: 641px) and (max-width: 900px) {
-    .stat-divider {
-      display: none;
-    }
-
-    .facts-strip {
-      grid-template-columns: repeat(2, 1fr);
-    }
-
-    .fact-card,
-    .fact-card-wide {
-      grid-column: span 1;
+    .history-grid > * {
+      grid-column: span 1 !important;
     }
   }
 </style>
-

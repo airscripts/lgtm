@@ -1,0 +1,49 @@
+---
+import BaseLayout from "@/layouts/base-layout.astro";
+---
+
+<BaseLayout
+  title="LGTM"
+  description="This page doesn't exist."
+>
+  <div
+    class="flex flex-1 flex-col items-center justify-center text-center px-5 py-24"
+    style="background: var(--color-bg);"
+  >
+    <p
+      class="text-[0.6875rem] font-bold tracking-[0.22em] uppercase m-0 mb-4"
+      style="font-family: var(--font-mono); color: var(--color-text-faint);"
+    >
+      404
+    </p>
+
+    <h1
+      class="text-[clamp(2rem,6vw,3rem)] font-extrabold tracking-[-0.03em] m-0 mb-4 leading-[1.1]"
+      style="color: var(--color-text);"
+    >
+      Page Not Found
+    </h1>
+
+    <p
+      class="text-[1.0625rem] leading-[1.7] m-0 mb-5 max-w-[440px]"
+      style="color: var(--color-text-muted);"
+    >
+      If you think something should be here, contributions are welcome!
+    </p>
+
+    <div class="flex flex-wrap justify-center mb-5">
+      <a href="/" class="btn btn-primary">Return Home</a>
+    </div>
+
+    <p class="text-sm m-0" style="color: var(--color-text-faint);">
+      Want to contribute a missing meaning?{" "}
+      <a
+        href="https://github.com/airscripts/lgtm"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="font-medium"
+        style="color: var(--color-accent);">Open a PR on GitHub &rarr;</a
+      >
+    </p>
+  </div>
+</BaseLayout>

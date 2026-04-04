@@ -9,46 +9,16 @@ interface Props {
 
 const { rarity, size = 'md' } = Astro.props;
 const label = RARITY_LABELS[rarity] ?? rarity;
+
+const sizeClasses = {
+  sm: 'text-[0.6875rem] py-[0.2em] px-[0.5em] rounded',
+  md: 'text-[0.75rem] py-[0.3em] px-[0.65em] rounded-md',
+  lg: 'text-[0.875rem] py-[0.4em] px-[0.85em] rounded-lg',
+}[size];
 ---
 
-<span class={`rarity-badge badge-${rarity} size-${size}`}>
-  {rarity === 'legendary' && <span class="star" aria-hidden="true">★</span>}
-  {rarity === 'epic' && <span class="gem" aria-hidden="true">◆</span>}
+<span class={`rarity-badge badge-${rarity} inline-flex items-center gap-[0.3em] font-semibold tracking-[0.04em] uppercase whitespace-nowrap ${sizeClasses}`}>
+  {rarity === 'legendary' && <span class="text-[0.85em] leading-none" aria-hidden="true">★</span>}
+  {rarity === 'epic' && <span class="text-[0.85em] leading-none" aria-hidden="true">◆</span>}
   {label}
 </span>
-
-<style>
-  .rarity-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.3em;
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    border-radius: 6px;
-    white-space: nowrap;
-  }
-
-  .size-sm {
-    font-size: 0.6875rem;
-    padding: 0.2em 0.5em;
-    border-radius: 4px;
-  }
-
-  .size-md {
-    font-size: 0.75rem;
-    padding: 0.3em 0.65em;
-  }
-
-  .size-lg {
-    font-size: 0.875rem;
-    padding: 0.4em 0.85em;
-    border-radius: 8px;
-  }
-
-  .star, .gem {
-    font-size: 0.85em;
-    line-height: 1;
-  }
-</style>

@@ -64,3 +64,7 @@ export function getAllCategories(): string[] {
 export function getAllRarities(): Rarity[] {
   return Object.keys(RARITY_WEIGHTS) as Rarity[];
 }
+
+export function getEntriesByRarity(rarity: Rarity): LGTMEntry[] {
+  return getAllEntries().filter((e) => e.rarity === rarity);
+}

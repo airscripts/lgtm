@@ -1,34 +1,35 @@
 ---
 import BaseLayout from '@/layouts/base-layout.astro';
 import BreadcrumbBar from '@/components/breadcrumb-bar.astro';
-import CategoryBadge from '@/components/category-badge.astro';
+import RarityBadge from '@/components/rarity-badge.astro';
 import CategoryEntries from '@/components/category-entries';
-import { getAllEntries, getAllCategories, CATEGORY_LABELS } from '@/lib/lgtm';
+import { getAllEntries, getAllRarities, RARITY_LABELS } from '@/lib/lgtm';
+import type { Rarity } from '@/lib/lgtm';
 
 export async function getStaticPaths() {
   const entries = getAllEntries();
-  const categories = getAllCategories();
+  const rarities = getAllRarities();
 
-  return categories.map((category) => ({
-    params: { category },
+  return rarities.map((rarity) => ({
+    params: { rarity },
     props: {
-      entries: entries.filter((e) => e.category === category),
-      category,
+      entries: entries.filter((e) => e.rarity === rarity),
+      rarity,
     },
   }));
 }
 
-const { entries, category } = Astro.props;
-const label = CATEGORY_LABELS[category] ?? category;
+const { entries, rarity } = Astro.props;
+const label = RARITY_LABELS[rarity as Rarity] ?? rarity;
 ---
 
 <BaseLayout
-  title="LGTM"
-  description={`All ${entries.length} LGTM alternative meanings in the "${label}" category.`}
+  title={`LGTM — ${label}`}
+  description={`All ${entries.length} LGTM alternative meanings with "${label}" rarity.`}
 >
   <BreadcrumbBar items={[
     { label: 'Home', href: '/' },
-    { label: 'Categories', href: '/categories' },
+    { label: 'Rarities', href: '/rarities' },
     { label },
   ]} />
 
@@ -41,19 +42,19 @@ const label = CATEGORY_LABELS[category] ?? category;
             class="text-[clamp(1.75rem,5vw,2.5rem)] font-extrabold tracking-[-0.03em] m-0"
             style="color: var(--color-text);"
           >{label}</h1>
-          <CategoryBadge category={category} size="md" />
+          <RarityBadge rarity={rarity as Rarity} size="md" />
         </div>
-        <p class="text-base m-0" style="color: var(--color-text-muted);">{entries.length} entries in this category.</p>
+        <p class="text-base m-0" style="color: var(--color-text-muted);">{entries.length} entries with this rarity.</p>
       </div>
 
       <div class="flex gap-6 mb-8">
         <a
-          href="/categories"
+          href="/rarities"
           class="text-[0.9rem] no-underline border-b pb-[2px] transition-colors duration-150"
           style="color: var(--color-text-muted); border-color: var(--color-border);"
           onmouseover="this.style.color='var(--color-accent)';this.style.borderColor='var(--color-accent)';"
           onmouseout="this.style.color='var(--color-text-muted)';this.style.borderColor='var(--color-border)';"
-        >&larr; All categories</a>
+        >&larr; All rarities</a>
         <a
           href="/browse"
           class="text-[0.9rem] no-underline border-b pb-[2px] transition-colors duration-150"

@@ -198,6 +198,7 @@ export default function BrowseFilters({ entries }: Props) {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+      {/* Search input */}
       <div style={{ position: 'relative' }}>
         <span style={{
           position: 'absolute',
@@ -232,6 +233,7 @@ export default function BrowseFilters({ entries }: Props) {
         />
       </div>
 
+      {/* Filter pills */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', alignItems: 'center' }}>
           <span style={{
@@ -313,6 +315,7 @@ export default function BrowseFilters({ entries }: Props) {
         </div>
       </div>
 
+      {/* Results bar */}
       <div style={{
         display: 'flex',
         alignItems: 'center',
@@ -373,6 +376,7 @@ export default function BrowseFilters({ entries }: Props) {
         </div>
       </div>
 
+      {/* Results list */}
       {filtered.length === 0 ? (
         <div style={{
           textAlign: 'center',
