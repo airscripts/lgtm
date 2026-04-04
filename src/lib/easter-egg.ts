@@ -11,5 +11,6 @@ Wow, you're a fellow hacker!
 Here is your reward: https://www.youtube.com/watch?v=dQw4w9WgXcQ
 `;
 
+  // eslint-disable-next-line no-console
   console.log(`%c${LGTM_FIG}`, 'color: #7c6cf5; font-family: monospace;');
 }

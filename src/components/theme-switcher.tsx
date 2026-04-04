@@ -23,17 +23,17 @@ const THEMES: { value: Theme; icon: () => ReactElement; label: string }[] = [
 export default function ThemeSwitcher() {
   const [theme, setTheme] = useState<Theme>('system');
 
-  // On mount, read persisted preference and update theme. We intentionally
-  // avoid reading `localStorage` during render to keep server and client
-  // markup identical and prevent hydration mismatches.
   useEffect(() => {
     const stored = (localStorage.getItem(THEME_STORAGE_KEY) as Theme | null) ?? null;
     const validValues = THEMES.map((themeOption) => themeOption.value);
+
     if (stored && validValues.includes(stored)) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setTheme(stored);
       applyTheme(stored);
       return;
     }
+
     applyTheme('system');
   }, []);
 
@@ -42,6 +42,7 @@ export default function ThemeSwitcher() {
     const next = THEMES[(idx + 1) % THEMES.length].value;
     setTheme(next);
     applyTheme(next);
+
     if (next === 'system') {
       localStorage.removeItem(THEME_STORAGE_KEY);
     } else {
