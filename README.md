@@ -19,7 +19,7 @@ The site is fully static (no server-side rendering, no database). All data lives
 
 ## Installation
 
-Requires Node.js >= 22 and pnpm >= 10.
+Requires Node.js >= 24 and pnpm >= 10.
 
 ```sh
 pnpm install
@@ -85,7 +85,7 @@ GitHub Actions runs on every push and pull request to `main`:
 
 1. Checkout
 2. Set up pnpm
-3. Set up Node.js 22
+3. Set up Node.js 24
 4. `pnpm install --frozen-lockfile`
 5. `pnpm build`
 6. `pnpm test`
