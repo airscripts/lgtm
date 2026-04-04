@@ -12,9 +12,9 @@ const { items } = Astro.props;
 ---
 
 <nav
+  aria-label="Breadcrumb"
   class="border-b py-[0.625rem]"
   style="background: var(--color-surface); border-color: var(--color-border);"
-  aria-label="Breadcrumb"
 >
   <div class="container">
     <ol class="list-none m-0 p-0 flex items-center flex-wrap gap-1">
@@ -24,10 +24,10 @@ const { items } = Astro.props;
             {item.href && i < items.length - 1 ? (
               <a
                 href={item.href}
-                class="text-sm no-underline transition-colors duration-150"
                 style="color: var(--color-text-muted);"
                 onmouseover="this.style.color='var(--color-text)';"
                 onmouseout="this.style.color='var(--color-text-muted)';"
+                class="text-sm no-underline transition-colors duration-150"
               >
                 {item.label}
               </a>

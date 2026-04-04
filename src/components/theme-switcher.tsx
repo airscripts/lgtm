@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { ReactElement } from 'react';
+import { Monitor, Sun, Moon } from 'lucide-react';
 import { THEME_STORAGE_KEY } from '@/lib/config';
 
 type Theme = 'system' | 'light' | 'dark';
@@ -13,74 +14,10 @@ function applyTheme(theme: Theme) {
   }
 }
 
-function IconSystem() {
-  return (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <rect x="2" y="3" width="20" height="14" rx="2" />
-      <line x1="8" y1="21" x2="16" y2="21" />
-      <line x1="12" y1="17" x2="12" y2="21" />
-    </svg>
-  );
-}
-
-function IconSun() {
-  return (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <circle cx="12" cy="12" r="4" />
-      <line x1="12" y1="2" x2="12" y2="4" />
-      <line x1="12" y1="20" x2="12" y2="22" />
-      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
-      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
-      <line x1="2" y1="12" x2="4" y2="12" />
-      <line x1="20" y1="12" x2="22" y2="12" />
-      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
-      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
-    </svg>
-  );
-}
-
-function IconMoon() {
-  return (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-    </svg>
-  );
-}
-
 const THEMES: { value: Theme; icon: () => ReactElement; label: string }[] = [
-  { value: 'system', icon: IconSystem, label: 'System theme' },
-  { value: 'light', icon: IconSun, label: 'Light theme' },
-  { value: 'dark', icon: IconMoon, label: 'Dark theme' },
+  { value: 'system', icon: () => <Monitor size={18} aria-hidden="true" />, label: 'System theme' },
+  { value: 'light', icon: () => <Sun size={18} aria-hidden="true" />, label: 'Light theme' },
+  { value: 'dark', icon: () => <Moon size={18} aria-hidden="true" />, label: 'Dark theme' },
 ];
 
 export default function ThemeSwitcher() {

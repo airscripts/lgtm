@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { Shuffle, Link, Check, ExternalLink } from 'lucide-react';
 import type { LGTMEntry, Rarity } from '@/lib/lgtm';
 import { RARITY_LABELS, CATEGORY_LABELS } from '@/lib/lgtm';
-import { RARITY_COLORS, RARITY_ICONS, CATEGORY_COLORS } from '@/lib/content';
+import { RARITY_COLORS, CATEGORY_COLORS } from '@/lib/content';
 import { COPY_FEEDBACK_MS } from '@/lib/config';
 import { weightedRandomExcluding } from '@/lib/random';
 
@@ -12,12 +12,10 @@ interface Props {
 }
 
 function RarityBadgeInline({ rarity }: { rarity: Rarity }) {
-  const icon = RARITY_ICONS[rarity];
   return (
     <span
       className={`badge-${rarity} inline-flex items-center gap-[0.3em] text-xs font-bold tracking-[0.04em] uppercase rounded-md py-[0.3em] px-[0.65em]`}
     >
-      {icon && <span aria-hidden="true">{icon}</span>}
       {RARITY_LABELS[rarity]}
     </span>
   );

@@ -20,13 +20,6 @@ export const CATEGORY_COLORS: Record<string, string> = {
   chaotic: '#f97316',
 };
 
-export const RARITY_ICONS: Record<Rarity, string> = {
-  common: '',
-  rare: '',
-  epic: '◆',
-  legendary: '★',
-};
-
 export const RARITY_ORDER: Record<Rarity, number> = {
   common: 0,
   rare: 1,

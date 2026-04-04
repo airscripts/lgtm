@@ -1,9 +1,10 @@
+import { PAGE_SIZE } from '@/lib/config';
 import { useState, useMemo } from 'react';
+import Pagination from '@/components/pagination';
 import type { LGTMEntry, Rarity } from '@/lib/lgtm';
 import { RARITY_LABELS, CATEGORY_LABELS, getAllRarities } from '@/lib/lgtm';
-import { CATEGORY_COLORS, RARITY_COLORS, RARITY_ICONS, RARITY_ORDER } from '@/lib/content';
-import { PAGE_SIZE } from '@/lib/config';
-import Pagination from '@/components/pagination';
+import { CATEGORY_COLORS, RARITY_COLORS, RARITY_ORDER } from '@/lib/content';
+import { Search, X } from 'lucide-react';
 
 interface Props {
   entries: LGTMEntry[];
@@ -13,17 +14,17 @@ type SortOption = 'alpha' | 'rarity-asc' | 'rarity-desc' | 'newest';
 
 const SORT_LABELS: Record<SortOption, string> = {
   alpha: 'A → Z',
-  'rarity-asc': 'Rarity: Common first',
-  'rarity-desc': 'Rarity: Legendary first',
-  newest: 'Newest first',
+  'rarity-asc': 'Rarity: Common First',
+  'rarity-desc': 'Rarity: Legendary First',
+  newest: 'Newest First',
 };
 
 function RarityDot({ rarity }: { rarity: Rarity }) {
   return (
     <span
       aria-hidden="true"
-      className="inline-block w-2 h-2 rounded-full flex-shrink-0 mt-[1px]"
       style={{ background: RARITY_COLORS[rarity] }}
+      className="inline-block w-2 h-2 rounded-full flex-shrink-0 mt-[1px]"
     />
   );
 }
@@ -53,31 +54,33 @@ function EntryRow({ entry }: { entry: LGTMEntry }) {
       <div className="min-w-0">
         <div className="flex items-center gap-2 mb-[0.2rem]">
           <RarityDot rarity={entry.rarity as Rarity} />
+
           <span
-            className="font-semibold text-[0.9375rem] overflow-hidden text-ellipsis whitespace-nowrap"
             style={{ color: 'var(--color-text)' }}
+            className="font-semibold text-[0.9375rem] overflow-hidden text-ellipsis whitespace-nowrap"
           >
             {entry.meaning}
           </span>
         </div>
+
         {entry.description && (
           <p
-            className="m-0 text-[0.8125rem] overflow-hidden text-ellipsis whitespace-nowrap"
             style={{ color: 'var(--color-text-muted)' }}
+            className="m-0 text-[0.8125rem] overflow-hidden text-ellipsis whitespace-nowrap"
           >
             {entry.description}
           </p>
         )}
       </div>
+
       <div className="flex flex-col items-end gap-1 flex-shrink-0">
         <span
-          className="text-xs font-bold tracking-[0.04em] uppercase"
           style={{ color: RARITY_COLORS[entry.rarity as Rarity] ?? 'var(--color-text-faint)' }}
+          className="text-xs font-bold tracking-[0.04em] uppercase inline-flex items-center gap-[0.3em]"
         >
-          {RARITY_ICONS[entry.rarity as Rarity]}
-          {RARITY_ICONS[entry.rarity as Rarity] ? ' ' : ''}
           {RARITY_LABELS[entry.rarity as Rarity]}
         </span>
+
         <span className="text-xs font-medium py-[0.15em] px-[0.45em]" style={{ color }}>
           {CATEGORY_LABELS[entry.category] ?? entry.category}
         </span>
@@ -91,8 +94,8 @@ export default function BrowseFilters({ entries }: Props) {
     () => [...new Set(entries.map((entry) => entry.category))].sort(),
     [entries],
   );
-  const allRarities = getAllRarities();
 
+  const allRarities = getAllRarities();
   const [search, setSearch] = useState('');
   const [activeCategories, setActiveCategories] = useState<Set<string>>(new Set());
   const [activeRarities, setActiveRarities] = useState<Set<string>>(new Set());
@@ -102,26 +105,32 @@ export default function BrowseFilters({ entries }: Props) {
   function toggleCategory(category: string) {
     setActiveCategories((prev) => {
       const next = new Set(prev);
+
       if (next.has(category)) {
         next.delete(category);
       } else {
         next.add(category);
       }
+
       return next;
     });
+
     setPage(1);
   }
 
   function toggleRarity(rarity: string) {
     setActiveRarities((prev) => {
       const next = new Set(prev);
+
       if (next.has(rarity)) {
         next.delete(rarity);
       } else {
         next.add(rarity);
       }
+
       return next;
     });
+
     setPage(1);
   }
 
@@ -130,6 +139,7 @@ export default function BrowseFilters({ entries }: Props) {
 
     if (search.trim()) {
       const searchQuery = search.toLowerCase();
+
       result = result.filter(
         (entry) =>
           entry.meaning.toLowerCase().includes(searchQuery) ||
@@ -150,12 +160,16 @@ export default function BrowseFilters({ entries }: Props) {
       switch (sort) {
         case 'alpha':
           return a.meaning.localeCompare(b.meaning);
+
         case 'rarity-asc':
           return (RARITY_ORDER[a.rarity as Rarity] ?? 0) - (RARITY_ORDER[b.rarity as Rarity] ?? 0);
+
         case 'rarity-desc':
           return (RARITY_ORDER[b.rarity as Rarity] ?? 0) - (RARITY_ORDER[a.rarity as Rarity] ?? 0);
+
         case 'newest':
           return (b.created_at ?? '').localeCompare(a.created_at ?? '');
+
         default:
           return 0;
       }
@@ -166,7 +180,6 @@ export default function BrowseFilters({ entries }: Props) {
   const clampedPage = Math.min(page, totalPages);
   const pageStart = (clampedPage - 1) * PAGE_SIZE;
   const paginated = filtered.slice(pageStart, pageStart + PAGE_SIZE);
-
   const hasFilters = search.trim() || activeCategories.size > 0 || activeRarities.size > 0;
 
   function clearAll() {
@@ -183,56 +196,57 @@ export default function BrowseFilters({ entries }: Props) {
 
   return (
     <div className="flex flex-col gap-6">
-      {/* Search input */}
       <div className="relative">
         <span
           className="absolute left-4 top-1/2 -translate-y-1/2 text-base pointer-events-none"
           style={{ color: 'var(--color-text-faint)' }}
         >
-          ⌕
+          <Search size={18} aria-hidden="true" />
         </span>
+
         <input
           type="search"
-          placeholder="Search meanings, descriptions, tags…"
           value={search}
+          placeholder="Search meanings, descriptions, tags…"
+          onBlur={(e) => (e.target.style.borderColor = 'var(--color-border)')}
+          onFocus={(e) => (e.target.style.borderColor = 'var(--color-accent)')}
+          className="w-full py-3 pl-10 pr-4 text-[0.9375rem] rounded-[10px] border outline-none transition-[border-color] duration-150 box-border"
           onChange={(e) => {
             setSearch(e.target.value);
             setPage(1);
           }}
-          className="w-full py-3 pl-10 pr-4 text-[0.9375rem] rounded-[10px] border outline-none transition-[border-color] duration-150 box-border"
           style={{
+            color: 'var(--color-text)',
             background: 'var(--color-surface)',
             borderColor: 'var(--color-border)',
-            color: 'var(--color-text)',
           }}
-          onFocus={(e) => (e.target.style.borderColor = 'var(--color-accent)')}
-          onBlur={(e) => (e.target.style.borderColor = 'var(--color-border)')}
         />
       </div>
 
-      {/* Filter pills */}
       <div className="flex flex-col gap-3">
         <div className="flex flex-wrap gap-2 items-center">
           <span
-            className="text-xs font-semibold tracking-[0.06em] uppercase mr-1"
             style={{ color: 'var(--color-text-faint)' }}
+            className="text-xs font-semibold tracking-[0.06em] uppercase mr-1"
           >
             Category
           </span>
+
           {allCategories.map((category) => {
             const active = activeCategories.has(category);
             const color = CATEGORY_COLORS[category] ?? 'var(--color-text-muted)';
+
             return (
               <button
                 key={category}
                 onClick={() => toggleCategory(category)}
                 className="text-[0.8125rem] font-medium py-[0.3em] px-[0.75em] rounded-[20px] cursor-pointer transition-all duration-150"
                 style={{
+                  color: active ? color : 'var(--color-text-muted)',
                   border: `1.5px solid ${active ? color : 'var(--color-border)'}`,
                   background: active
                     ? `color-mix(in srgb, ${color} 12%, var(--color-surface))`
                     : 'var(--color-surface)',
-                  color: active ? color : 'var(--color-text-muted)',
                 }}
               >
                 {CATEGORY_LABELS[category] ?? category}
@@ -243,29 +257,29 @@ export default function BrowseFilters({ entries }: Props) {
 
         <div className="flex flex-wrap gap-2 items-center">
           <span
-            className="text-xs font-semibold tracking-[0.06em] uppercase mr-1"
             style={{ color: 'var(--color-text-faint)' }}
+            className="text-xs font-semibold tracking-[0.06em] uppercase mr-1"
           >
             Rarity
           </span>
+
           {allRarities.map((rarity) => {
             const active = activeRarities.has(rarity);
             const color = RARITY_COLORS[rarity];
-            const icon = RARITY_ICONS[rarity];
+
             return (
               <button
                 key={rarity}
                 onClick={() => toggleRarity(rarity)}
-                className="text-[0.8125rem] font-semibold py-[0.3em] px-[0.75em] rounded-[20px] cursor-pointer transition-all duration-150 tracking-[0.03em] uppercase"
+                className="text-[0.8125rem] font-semibold py-[0.3em] px-[0.75em] rounded-[20px] cursor-pointer transition-all duration-150 tracking-[0.03em] uppercase inline-flex items-center gap-[0.3em]"
                 style={{
+                  color: active ? color : 'var(--color-text-muted)',
                   border: `1.5px solid ${active ? color : 'var(--color-border)'}`,
                   background: active
                     ? `color-mix(in srgb, ${color} 12%, var(--color-surface))`
                     : 'var(--color-surface)',
-                  color: active ? color : 'var(--color-text-muted)',
                 }}
               >
-                {icon && `${icon} `}
                 {RARITY_LABELS[rarity]}
               </button>
             );
@@ -273,10 +287,9 @@ export default function BrowseFilters({ entries }: Props) {
         </div>
       </div>
 
-      {/* Results bar */}
       <div
-        className="flex items-center justify-between flex-wrap gap-3 pb-3 border-b"
         style={{ borderColor: 'var(--color-border)' }}
+        className="flex items-center justify-between flex-wrap gap-3 pb-3 border-b"
       >
         <p className="m-0 text-sm" style={{ color: 'var(--color-text-muted)' }}>
           <strong style={{ color: 'var(--color-text)' }}>{filtered.length}</strong> of{' '}
@@ -289,8 +302,8 @@ export default function BrowseFilters({ entries }: Props) {
           {hasFilters && (
             <button
               onClick={clearAll}
-              className="ml-3 text-[0.8125rem] bg-none border-none cursor-pointer p-0 underline"
               style={{ color: 'var(--color-accent)', background: 'none' }}
+              className="ml-3 text-[0.8125rem] bg-none border-none cursor-pointer p-0 underline"
             >
               Clear filters
             </button>
@@ -305,22 +318,29 @@ export default function BrowseFilters({ entries }: Props) {
           >
             Sort:
           </label>
+
           <select
             id="sort-select"
             value={sort}
+            onBlur={(e) => (e.currentTarget.style.borderColor = 'var(--color-border)')}
+            onFocus={(e) => (e.currentTarget.style.borderColor = 'var(--color-accent)')}
+            className="text-sm py-[0.3rem] px-[0.6rem] rounded-md border cursor-pointer outline-none transition-colors duration-150"
             onChange={(e) => {
               setSort(e.target.value as SortOption);
               setPage(1);
             }}
-            className="text-sm py-[0.3rem] px-[0.6rem] rounded-md border cursor-pointer"
             style={{
+              color: 'var(--color-text)',
               background: 'var(--color-surface)',
               borderColor: 'var(--color-border)',
-              color: 'var(--color-text)',
             }}
           >
             {Object.entries(SORT_LABELS).map(([key, label]) => (
-              <option key={key} value={key}>
+              <option
+                key={key}
+                value={key}
+                style={{ background: 'var(--color-surface)', color: 'var(--color-text)' }}
+              >
                 {label}
               </option>
             ))}
@@ -328,14 +348,16 @@ export default function BrowseFilters({ entries }: Props) {
         </div>
       </div>
 
-      {/* Results list */}
       {filtered.length === 0 ? (
         <div className="text-center py-12 px-4" style={{ color: 'var(--color-text-muted)' }}>
-          <p className="text-[2rem] m-0 mb-3">🔍</p>
-          <p className="m-0 font-semibold">No entries match your filters.</p>
+          <div className="flex justify-center mb-4">
+            <X size={64} className="text-center" />
+          </div>
+
+          <p className="m-0 text-[0.9rem]">No entries match your filters.</p>
           <button
             onClick={clearAll}
-            className="mt-4 text-[0.9rem] bg-none border-none cursor-pointer underline"
+            className="mt-2 text-[0.9rem] bg-none border-none cursor-pointer underline"
             style={{ color: 'var(--color-accent)', background: 'none' }}
           >
             Clear all filters
