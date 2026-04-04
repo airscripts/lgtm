@@ -9,16 +9,20 @@ on:
 
 jobs:
   initialize:
+    name: Initialize
     uses: ./.github/workflows/initialize.yml
 
   verify:
+    name: Verify
     needs: initialize
     uses: ./.github/workflows/verify.yml
 
   build:
+    name: Build
     needs: verify
     uses: ./.github/workflows/build.yml
 
   test:
+    name: Test
     needs: build
     uses: ./.github/workflows/test.yml
