@@ -71,7 +71,9 @@ const rarityBg: Record<string, string> = {
     <div class="flex flex-1 flex-col justify-center max-w-[680px] w-full mx-auto px-5 py-12 pb-8 gap-10">
       <div class="flex flex-col flex-1 animate-up">
         <div class="flex gap-2 flex-wrap mb-8">
-          <span class={`rarity-badge badge-${entry.rarity} inline-flex items-center font-semibold tracking-[0.04em] uppercase whitespace-nowrap text-[0.875rem] py-[0.4em] px-[0.85em] rounded-lg`}>
+          <span
+            class={`rarity-badge badge-${entry.rarity} inline-flex items-center font-semibold tracking-[0.04em] uppercase whitespace-nowrap text-[0.875rem] py-[0.4em] px-[0.85em] rounded-lg`}
+          >
             {RARITY_LABELS[entry.rarity]}
           </span>
 

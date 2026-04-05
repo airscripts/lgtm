@@ -46,7 +46,9 @@ const rarityData = rarities.map((rarity) => {
               onmouseover="this.style.borderColor='var(--color-accent)';this.style.boxShadow='0 4px 16px color-mix(in srgb, var(--color-accent) 10%, transparent)';this.style.transform='translateY(-2px)';"
             >
               <div class="flex items-center justify-between gap-2">
-                <span class={`rarity-badge badge-${key} inline-flex items-center font-semibold tracking-[0.04em] uppercase whitespace-nowrap text-[0.75rem] py-[0.3em] px-[0.65em] rounded-md`}>
+                <span
+                  class={`rarity-badge badge-${key} inline-flex items-center font-semibold tracking-[0.04em] uppercase whitespace-nowrap text-[0.75rem] py-[0.3em] px-[0.65em] rounded-md`}
+                >
                   {RARITY_LABELS[key as Rarity] ?? key}
                 </span>
 

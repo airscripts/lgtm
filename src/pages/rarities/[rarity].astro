@@ -37,9 +37,12 @@ const label = RARITY_LABELS[rarity as Rarity] ?? rarity;
             {label}
           </h1>
 
-          <span class={`rarity-badge badge-${rarity} inline-flex items-center font-semibold tracking-[0.04em] uppercase whitespace-nowrap text-[0.75rem] py-[0.3em] px-[0.65em] rounded-md`}>
+          <span
+            class={`rarity-badge badge-${rarity} inline-flex items-center font-semibold tracking-[0.04em] uppercase whitespace-nowrap text-[0.75rem] py-[0.3em] px-[0.65em] rounded-md`}
+          >
             {label}
-          </span>        </div>
+          </span>
+        </div>
 
         <p class="text-base m-0" style="color: var(--color-text-muted);">
           {entries.length} entries with this rarity.
