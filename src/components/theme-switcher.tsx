@@ -1,9 +1,14 @@
-import { useEffect, useState } from 'react';
+'use client';
 import type { ReactElement } from 'react';
-import { Monitor, Sun, Moon } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { THEME_STORAGE_KEY } from '@/lib/config';
+import { Monitor, Sun, Moon } from 'lucide-react';
 
 type Theme = 'system' | 'light' | 'dark';
+
+function isValidTheme(value: string | null, validValues: Theme[]): value is Theme {
+  return value !== null && validValues.includes(value as Theme);
+}
 
 function applyTheme(theme: Theme) {
   const root = document.documentElement;
@@ -20,14 +25,14 @@ const THEMES: { value: Theme; icon: () => ReactElement; label: string }[] = [
   { value: 'dark', icon: () => <Moon size={18} aria-hidden="true" />, label: 'Dark theme' },
 ];
 
-export default function ThemeSwitcher() {
+export function ThemeSwitcher() {
   const [theme, setTheme] = useState<Theme>('system');
 
   useEffect(() => {
     const stored = (localStorage.getItem(THEME_STORAGE_KEY) as Theme | null) ?? null;
     const validValues = THEMES.map((themeOption) => themeOption.value);
 
-    if (stored && validValues.includes(stored)) {
+    if (isValidTheme(stored, validValues)) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setTheme(stored);
       applyTheme(stored);
@@ -57,13 +62,13 @@ export default function ThemeSwitcher() {
     <button
       type="button"
       onClick={cycle}
-      aria-label={current.label}
       title={current.label}
+      aria-label={current.label}
       className="inline-flex items-center justify-center w-9 h-9 rounded-lg border flex-shrink-0 cursor-pointer transition-[background,color] duration-150 hover:[background:var(--color-surface-raised)] hover:[color:var(--color-text)]"
       style={{
-        border: '1px solid var(--color-border)',
         background: 'transparent',
         color: 'var(--color-text-muted)',
+        border: '1px solid var(--color-border)',
       }}
       onMouseEnter={(e) => {
         (e.currentTarget as HTMLButtonElement).style.background = 'var(--color-surface-raised)';

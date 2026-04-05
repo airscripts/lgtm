@@ -2,9 +2,9 @@
 
 @theme {
   --color-bg: #f8f8f5;
+  --color-border: #e2e0d8;
   --color-surface: #ffffff;
   --color-surface-raised: #f1f0ec;
-  --color-border: #e2e0d8;
 
   --color-text: #1a1917;
   --color-text-muted: #6b6860;
@@ -30,16 +30,16 @@
   --color-legendary-bg: #fffbeb;
   --color-legendary-border: #fde68a;
 
-  --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', ui-monospace, monospace;
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', ui-monospace, monospace;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --color-bg: #0f0f0e;
+    --color-border: #2e2c28;
     --color-surface: #1a1917;
     --color-surface-raised: #242320;
-    --color-border: #2e2c28;
 
     --color-text: #f0efe8;
     --color-text-muted: #9c9a92;
@@ -99,11 +99,11 @@
 }
 
 html {
-  background-color: var(--color-bg);
-  color: var(--color-text);
-  font-family: var(--font-sans);
   font-size: 16px;
   line-height: 1.6;
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  background-color: var(--color-bg);
   -webkit-font-smoothing: antialiased;
 }
 
@@ -178,20 +178,21 @@ a:hover {
 }
 
 .btn {
-  display: inline-flex;
-  align-items: center;
   gap: 0.5rem;
-  padding: 0.625rem 1.25rem;
-  border-radius: 8px;
-  font-size: 0.9375rem;
-  font-weight: 600;
+  border: none;
   cursor: pointer;
+  font-weight: 600;
+  border-radius: 8px;
+  align-items: center;
+  display: inline-flex;
+  font-size: 0.9375rem;
+  text-decoration: none;
+  padding: 0.625rem 1.25rem;
+
   transition:
     background 0.15s ease,
     transform 0.1s ease,
     box-shadow 0.15s ease;
-  border: none;
-  text-decoration: none;
 }
 
 .btn:hover {
@@ -204,13 +205,13 @@ a:hover {
 }
 
 .btn-primary {
-  background: var(--color-accent);
   color: #fff;
+  background: var(--color-accent);
 }
 
 .btn-primary:hover {
-  background: var(--color-accent-hover);
   color: #fff;
+  background: var(--color-accent-hover);
   box-shadow: 0 4px 12px color-mix(in srgb, var(--color-accent) 40%, transparent);
 }
 
@@ -221,8 +222,8 @@ a:hover {
 }
 
 .btn-ghost:hover {
-  background: var(--color-surface-raised);
   color: var(--color-text);
+  background: var(--color-surface-raised);
 }
 
 @media (prefers-reduced-motion: no-preference) {

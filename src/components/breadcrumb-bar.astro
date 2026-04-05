@@ -1,14 +1,26 @@
 ---
-interface BreadcrumbItem {
+type BreadcrumbItem = {
   label: string;
   href?: string;
-}
+};
 
-interface Props {
+type Props = {
   items: BreadcrumbItem[];
-}
+};
 
 const { items } = Astro.props;
+
+function isLink(item: BreadcrumbItem, i: number): boolean {
+  return item.href !== undefined && i < items.length - 1;
+}
+
+function isLast(i: number): boolean {
+  return i === items.length - 1;
+}
+
+function hasNext(i: number): boolean {
+  return i < items.length - 1;
+}
 ---
 
 <nav
@@ -21,7 +33,7 @@ const { items } = Astro.props;
       {
         items.map((item, i) => (
           <li class="flex items-center gap-1">
-            {item.href && i < items.length - 1 ? (
+            {isLink(item, i) && (
               <a
                 href={item.href}
                 style="color: var(--color-text-muted);"
@@ -31,16 +43,19 @@ const { items } = Astro.props;
               >
                 {item.label}
               </a>
-            ) : (
+            )}
+
+            {!isLink(item, i) && (
               <span
                 class="text-sm font-medium"
                 style="color: var(--color-text);"
-                aria-current={i === items.length - 1 ? 'page' : undefined}
+                aria-current={isLast(i) ? 'page' : undefined}
               >
                 {item.label}
               </span>
             )}
-            {i < items.length - 1 && (
+
+            {hasNext(i) && (
               <span class="text-sm" style="color: var(--color-text-faint);" aria-hidden="true">
                 /
               </span>

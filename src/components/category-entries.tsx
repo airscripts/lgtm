@@ -1,13 +1,14 @@
+'use client';
 import { useState } from 'react';
-import type { LGTMEntry } from '@/lib/lgtm';
 import { PAGE_SIZE } from '@/lib/config';
-import Pagination from '@/components/pagination';
+import type { LGTMEntry } from '@/lib/lgtm';
+import { Pagination } from '@/components/pagination';
 
-interface Props {
+export type CategoryEntriesProps = {
   entries: LGTMEntry[];
-}
+};
 
-export default function CategoryEntries({ entries }: Props) {
+export function CategoryEntries({ entries }: CategoryEntriesProps) {
   const [page, setPage] = useState(1);
   const totalPages = Math.ceil(entries.length / PAGE_SIZE);
   const start = (page - 1) * PAGE_SIZE;
@@ -27,8 +28,8 @@ export default function CategoryEntries({ entries }: Props) {
             href={`/lgtm/${entry.id}`}
             className="flex items-start gap-4 py-4 border-b no-underline transition-colors duration-150"
             style={{
-              borderColor: 'var(--color-border)',
               color: 'inherit',
+              borderColor: 'var(--color-border)',
             }}
           >
             <span
@@ -37,17 +38,16 @@ export default function CategoryEntries({ entries }: Props) {
             >
               #{entry.id}
             </span>
+
             <div>
-              <div
-                className="font-semibold text-[0.9375rem] leading-[1.4]"
-                style={{ color: 'var(--color-text)' }}
-              >
+              <div style={{ color: 'var(--color-text)' }} className="font-semibold text-[0.9375rem] leading-[1.4]">
                 {entry.meaning}
               </div>
+
               {entry.description && (
                 <div
-                  className="text-[0.8125rem] leading-[1.5] mt-[0.2rem]"
                   style={{ color: 'var(--color-text-muted)' }}
+                  className="text-[0.8125rem] leading-[1.5] mt-[0.2rem]"
                 >
                   {entry.description}
                 </div>
@@ -57,7 +57,7 @@ export default function CategoryEntries({ entries }: Props) {
         ))}
       </div>
 
-      <Pagination page={page} totalPages={totalPages} onPage={handlePageChange} />
+      <Pagination page={page} onPage={handlePageChange} totalPages={totalPages} />
     </div>
   );
 }

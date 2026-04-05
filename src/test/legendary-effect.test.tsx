@@ -1,34 +1,32 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render } from '@testing-library/react';
+import { describe, test, expect, vi, beforeEach } from 'vitest';
 
 vi.mock('canvas-confetti', () => ({ default: vi.fn() }));
 
 import confetti from 'canvas-confetti';
-import LegendaryEffect from '@/components/legendary-effect';
+import { LegendaryEffect } from '@/components/legendary-effect';
 
-beforeEach(() => {
-  vi.clearAllMocks();
-});
+describe('legendary effect', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
 
-describe('LegendaryEffect', () => {
-  it('renders without crashing', () => {
+  test('should render without crashing', () => {
     const { container } = render(<LegendaryEffect />);
     expect(container).toBeDefined();
   });
 
-  it('calls confetti on mount', () => {
+  test('should call confetti on mount', () => {
     render(<LegendaryEffect />);
     expect(confetti).toHaveBeenCalledOnce();
   });
 
-  it('calls confetti with particleCount', () => {
+  test('should call confetti with particleCount', () => {
     render(<LegendaryEffect />);
-    expect(confetti).toHaveBeenCalledWith(
-      expect.objectContaining({ particleCount: expect.any(Number) }),
-    );
+    expect(confetti).toHaveBeenCalledWith(expect.objectContaining({ particleCount: expect.any(Number) }));
   });
 
-  it('renders null (no dom nodes)', () => {
+  test('should render null (no dom nodes)', () => {
     const { container } = render(<LegendaryEffect />);
     expect(container.firstChild).toBeNull();
   });

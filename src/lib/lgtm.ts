@@ -2,24 +2,17 @@ import rawData from '../../data/lgtm.json';
 
 export type Rarity = 'common' | 'rare' | 'epic' | 'legendary';
 
-export type Category =
-  | 'funny'
-  | 'sarcastic'
-  | 'wholesome'
-  | 'nerd'
-  | 'existential'
-  | 'corporate'
-  | 'chaotic';
+export type Category = 'funny' | 'sarcastic' | 'wholesome' | 'nerd' | 'existential' | 'corporate' | 'chaotic';
 
-export interface LGTMEntry {
+export type LGTMEntry = {
   id: number;
-  meaning: string;
-  category: Category | string;
   rarity: Rarity;
-  description?: string;
+  meaning: string;
   tags?: string[];
   created_at?: string;
-}
+  description?: string;
+  category: Category | string;
+};
 
 export const RARITY_WEIGHTS: Record<Rarity, number> = {
   common: 60,

@@ -4,8 +4,8 @@ on:
   workflow_call:
 
 jobs:
-  initialize:
-    name: Initialize
+  pipeline:
+    name: Pipeline
     runs-on: ubuntu-latest
 
     steps:

@@ -1,13 +1,14 @@
+'use client';
 import { useState } from 'react';
 import { Link, Check } from 'lucide-react';
 import { COPY_FEEDBACK_MS } from '@/lib/config';
 
-interface Props {
+export type CopyShareButtonProps = {
   url: string;
   label?: string;
-}
+};
 
-export default function CopyShareButton({ url, label = 'Copy share link' }: Props) {
+export function CopyShareButton({ url, label = 'Copy share link' }: CopyShareButtonProps) {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
@@ -21,17 +22,13 @@ export default function CopyShareButton({ url, label = 'Copy share link' }: Prop
       document.execCommand('copy');
       document.body.removeChild(input);
     }
+
     setCopied(true);
     setTimeout(() => setCopied(false), COPY_FEEDBACK_MS);
   };
 
   return (
-    <button
-      onClick={handleCopy}
-      className="btn btn-ghost"
-      style={{ fontFamily: 'inherit' }}
-      title={url}
-    >
+    <button title={url} onClick={handleCopy} className="btn btn-ghost" style={{ fontFamily: 'inherit' }}>
       {copied ? (
         <>
           <Check size={14} aria-hidden="true" />

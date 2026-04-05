@@ -1,7 +1,7 @@
 ---
-import BaseLayout from '@/layouts/base-layout.astro';
-import BrowseFilters from '@/components/browse-filters';
 import { getAllEntries } from '@/lib/lgtm';
+import BaseLayout from '@/layouts/base-layout.astro';
+import { BrowseFilters } from '@/components/browse-filters';
 
 const entries = getAllEntries();
 ---
@@ -14,16 +14,14 @@ const entries = getAllEntries();
     <div class="container">
       <div class="mb-10">
         <h1
-          class="text-[clamp(1.75rem,5vw,2.5rem)] font-extrabold tracking-[-0.03em] mb-3 mt-0"
           style="color: var(--color-text);"
+          class="text-[clamp(1.75rem,5vw,2.5rem)] font-extrabold tracking-[-0.03em] mb-3 mt-0"
         >
-          Browse all <span style="font-family: var(--font-mono); color: var(--color-accent);"
-            >LGTM</span
-          > meanings
+          Browse all <span style="font-family: var(--font-mono); color: var(--color-accent);"> LGTM </span> meanings
         </h1>
+
         <p class="text-[1.0625rem] m-0 leading-relaxed" style="color: var(--color-text-muted);">
-          {entries.length} entries across all categories and rarities. Filter, search, and find the perfect
-          one for your PR.
+          {entries.length} entries across all categories and rarities. Filter, search, and find the perfect one for your PR.
         </p>
       </div>
 

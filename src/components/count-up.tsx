@@ -1,16 +1,21 @@
+'use client';
 import { useEffect, useRef, useState } from 'react';
 
-interface Props {
+export type CountUpProps = {
   to: number;
   duration?: number;
   className?: string;
-}
+};
 
 function easeOutCubic(t: number): number {
   return 1 - Math.pow(1 - t, 3);
 }
 
-export default function CountUp({ to, duration = 1400, className }: Props) {
+function shouldStartAnimation(entries: IntersectionObserverEntry[], started: boolean): boolean {
+  return (entries[0]?.isIntersecting ?? false) && !started;
+}
+
+export function CountUp({ to, duration = 1400, className }: CountUpProps) {
   const [value, setValue] = useState(0);
   const ref = useRef<HTMLSpanElement>(null);
   const started = useRef(false);
@@ -21,10 +26,9 @@ export default function CountUp({ to, duration = 1400, className }: Props) {
 
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0]?.isIntersecting && !started.current) {
+        if (shouldStartAnimation(entries, started.current)) {
           started.current = true;
           observer.disconnect();
-
           const start = performance.now();
 
           function tick(now: number) {

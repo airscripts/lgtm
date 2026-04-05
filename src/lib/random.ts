@@ -1,19 +1,23 @@
-import type { LGTMEntry, Rarity } from './lgtm';
-import { RARITY_WEIGHTS } from './lgtm';
+import { RARITY_WEIGHTS } from '@/lib/lgtm';
+import type { LGTMEntry, Rarity } from '@/lib/lgtm';
+
+function entryWeight(entry: LGTMEntry): number {
+  return RARITY_WEIGHTS[entry.rarity as Rarity] ?? RARITY_WEIGHTS.common;
+}
+
+function buildPool(entries: LGTMEntry[], excludeId: number): LGTMEntry[] {
+  return entries.length > 1 ? entries.filter((entry) => entry.id !== excludeId) : entries;
+}
 
 export function weightedRandom(entries: LGTMEntry[]): LGTMEntry {
   if (entries.length === 0) throw new Error('Cannot pick from empty list');
 
-  const totalWeight = entries.reduce(
-    (sum, entry) => sum + (RARITY_WEIGHTS[entry.rarity as Rarity] ?? RARITY_WEIGHTS.common),
-    0,
-  );
+  const totalWeight = entries.reduce((sum, entry) => sum + entryWeight(entry), 0);
 
   let remaining = Math.random() * totalWeight;
 
   for (const entry of entries) {
-    const weight = RARITY_WEIGHTS[entry.rarity as Rarity] ?? RARITY_WEIGHTS.common;
-    remaining -= weight;
+    remaining -= entryWeight(entry);
     if (remaining <= 0) return entry;
   }
 
@@ -21,6 +25,6 @@ export function weightedRandom(entries: LGTMEntry[]): LGTMEntry {
 }
 
 export function weightedRandomExcluding(entries: LGTMEntry[], excludeId: number): LGTMEntry {
-  const pool = entries.length > 1 ? entries.filter((entry) => entry.id !== excludeId) : entries;
+  const pool = buildPool(entries, excludeId);
   return weightedRandom(pool);
 }

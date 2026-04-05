@@ -1,6 +1,6 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { ThemeSwitcher } from '@/components/theme-switcher';
 import { render, screen, fireEvent } from '@testing-library/react';
-import ThemeSwitcher from '@/components/theme-switcher';
+import { describe, test, expect, beforeEach, afterEach } from 'vitest';
 
 function getTheme() {
   return document.documentElement.getAttribute('data-theme');
@@ -16,25 +16,25 @@ afterEach(() => {
   document.documentElement.removeAttribute('data-theme');
 });
 
-describe('ThemeSwitcher', () => {
-  it('renders a button', () => {
+describe('theme switcher', () => {
+  test('should render a button', () => {
     render(<ThemeSwitcher />);
     expect(screen.getByRole('button')).toBeInTheDocument();
   });
 
-  it('starts in system mode (no data-theme attribute)', () => {
+  test('should start in system mode (no data-theme attribute)', () => {
     render(<ThemeSwitcher />);
     expect(getTheme()).toBeNull();
   });
 
-  it('cycles system → light on first click', () => {
+  test('should cycle system → light on first click', () => {
     render(<ThemeSwitcher />);
     fireEvent.click(screen.getByRole('button'));
     expect(getTheme()).toBe('light');
     expect(localStorage.getItem('lgtm-theme')).toBe('light');
   });
 
-  it('cycles light → dark on second click', () => {
+  test('should cycle light → dark on second click', () => {
     render(<ThemeSwitcher />);
     fireEvent.click(screen.getByRole('button'));
     fireEvent.click(screen.getByRole('button'));
@@ -42,7 +42,7 @@ describe('ThemeSwitcher', () => {
     expect(localStorage.getItem('lgtm-theme')).toBe('dark');
   });
 
-  it('cycles dark → system on third click', () => {
+  test('should cycle dark → system on third click', () => {
     render(<ThemeSwitcher />);
     fireEvent.click(screen.getByRole('button'));
     fireEvent.click(screen.getByRole('button'));
@@ -51,13 +51,13 @@ describe('ThemeSwitcher', () => {
     expect(localStorage.getItem('lgtm-theme')).toBeNull();
   });
 
-  it('restores persisted theme from localStorage on mount', () => {
+  test('should restore persisted theme from localStorage on mount', () => {
     localStorage.setItem('lgtm-theme', 'dark');
     render(<ThemeSwitcher />);
     expect(getTheme()).toBe('dark');
   });
 
-  it('has an accessible aria-label', () => {
+  test('should have an accessible aria-label', () => {
     render(<ThemeSwitcher />);
     const btn = screen.getByRole('button');
     expect(btn).toHaveAttribute('aria-label');

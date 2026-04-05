@@ -1,15 +1,10 @@
 ---
+import { CountUp } from '@/components/count-up';
 import BaseLayout from '@/layouts/base-layout.astro';
 import CategoryBadge from '@/components/category-badge.astro';
-import CountUp from '@/components/count-up';
-import {
-  getAllEntries,
-  getAllCategories,
-  CATEGORY_LABELS,
-  RARITY_LABELS,
-  RARITY_WEIGHTS,
-} from '@/lib/lgtm';
 import { CATEGORY_TAGLINES, FACTS, RARITY_TAGLINES } from '@/lib/content';
+
+import { getAllEntries, RARITY_LABELS, RARITY_WEIGHTS, CATEGORY_LABELS, getAllCategories } from '@/lib/lgtm';
 
 const entries = getAllEntries();
 const totalEntries = entries.length;
@@ -34,11 +29,7 @@ const RARITIES = (Object.keys(RARITY_WEIGHTS) as (keyof typeof RARITY_WEIGHTS)[]
 const totalWeight = Object.values(RARITY_WEIGHTS).reduce((a, b) => a + b, 0);
 ---
 
-<BaseLayout
-  title="LGTM"
-  description="Generate a random alternative meaning for LGTM to use in your next pull request."
->
-  <!-- Hero -->
+<BaseLayout title="LGTM" description="Generate a random alternative meaning for LGTM to use in your next pull request.">
   <div
     class="min-h-[75vh] flex flex-col items-stretch relative"
     style="background: var(--color-accent); padding-top: 3.75rem;"
@@ -53,82 +44,80 @@ const totalWeight = Object.values(RARITY_WEIGHTS).reduce((a, b) => a + b, 0);
             <span
               class="rounded-md px-[0.25em]"
               style="font-family: var(--font-mono); color: rgba(255,255,255,0.85); background: rgba(255,255,255,0.12);"
-              >LGTM</span
             >
+              LGTM
+            </span>
             mean today?
           </h1>
-          <p
-            class="text-[clamp(1rem,2.5vw,1.2rem)] text-white/80 max-w-[540px] mx-auto leading-[1.65]"
-          >
-            Creative, shareable alternative meanings for the classic code review acronym.
-            Rarity-weighted fun, ready to paste in your next PR.
+          <p class="text-[clamp(1rem,2.5vw,1.2rem)] text-white/80 max-w-[540px] mx-auto leading-[1.65]">
+            Creative, shareable alternative meanings for the classic code review acronym. Rarity-weighted fun, ready to
+            paste in your next PR.
           </p>
         </div>
 
         <div class="flex flex-col items-center gap-6 animate-up-delay-1">
           <a
             href="/random"
-            class="inline-flex items-center gap-2 py-4 px-10 text-[1.125rem] font-bold rounded-xl bg-white no-underline border-none cursor-pointer transition-[transform,box-shadow,background] duration-150 tracking-[-0.01em]"
             style="color: var(--color-accent); box-shadow: 0 4px 24px rgba(0,0,0,0.18);"
-            onmouseover="this.style.background='#f0eeff';this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 32px rgba(0,0,0,0.22)';"
             onmouseout="this.style.background='white';this.style.transform='';this.style.boxShadow='0 4px 24px rgba(0,0,0,0.18)';"
-            >Surprise Me!</a
+            onmouseover="this.style.background='#f0eeff';this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 32px rgba(0,0,0,0.22)';"
+            class="inline-flex items-center gap-2 py-4 px-10 text-[1.125rem] font-bold rounded-xl bg-white no-underline border-none cursor-pointer transition-[transform,box-shadow,background] duration-150 tracking-[-0.01em]"
           >
+            Surprise Me!
+          </a>
+
           <div class="flex gap-8 flex-wrap justify-center">
             <a
               href="/browse"
-              class="text-[0.9375rem] no-underline pb-[2px] border-b transition-[color,border-color] duration-150"
               style="color: rgba(255,255,255,0.7); border-color: rgba(255,255,255,0.3);"
               onmouseover="this.style.color='white';this.style.borderColor='rgba(255,255,255,0.7)';"
+              class="text-[0.9375rem] no-underline pb-[2px] border-b transition-[color,border-color] duration-150"
               onmouseout="this.style.color='rgba(255,255,255,0.7)';this.style.borderColor='rgba(255,255,255,0.3)';"
-              >Browse all {totalEntries} entries &rarr;</a
             >
+              Browse all {totalEntries} entries &rarr;
+            </a>
+
             <a
               href="/categories"
-              class="text-[0.9375rem] no-underline pb-[2px] border-b transition-[color,border-color] duration-150"
               style="color: rgba(255,255,255,0.7); border-color: rgba(255,255,255,0.3);"
               onmouseover="this.style.color='white';this.style.borderColor='rgba(255,255,255,0.7)';"
+              class="text-[0.9375rem] no-underline pb-[2px] border-b transition-[color,border-color] duration-150"
               onmouseout="this.style.color='rgba(255,255,255,0.7)';this.style.borderColor='rgba(255,255,255,0.3)';"
-              >View by category &rarr;</a
             >
+              View by category &rarr;
+            </a>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- scroll hint -->
     <div
-      class="flex flex-col items-center gap-[0.375rem] pb-8 text-white/50"
-      style="animation: scroll-bounce 2s ease-in-out infinite;"
       aria-hidden="true"
+      style="animation: scroll-bounce 2s ease-in-out infinite;"
+      class="flex flex-col items-center gap-[0.375rem] pb-8 text-white/50"
     >
-      <span
-        class="text-[0.6875rem] tracking-[0.12em] uppercase"
-        style="font-family: var(--font-mono);">scroll</span
-      >
+      <span class="text-[0.6875rem] tracking-[0.12em] uppercase" style="font-family: var(--font-mono);"> scroll </span>
+
       <svg class="w-4 h-4" viewBox="0 0 16 16" fill="none">
         <path
-          d="M8 3v10M3 9l5 5 5-5"
-          stroke="currentColor"
           stroke-width="1.5"
+          stroke="currentColor"
           stroke-linecap="round"
+          d="M8 3v10M3 9l5 5 5-5"
           stroke-linejoin="round"></path>
       </svg>
     </div>
   </div>
 
-  <!-- How It Works -->
-  <div
-    class="py-14 border-b page-content"
-    style="background: var(--color-surface); border-color: var(--color-border);"
-  >
+  <div class="py-14 border-b page-content" style="background: var(--color-surface); border-color: var(--color-border);">
     <div class="container">
       <h2
-        class="text-[clamp(1.25rem,3vw,1.625rem)] font-bold tracking-[-0.02em] m-0 mb-7"
         style="color: var(--color-text);"
+        class="text-[clamp(1.25rem,3vw,1.625rem)] font-bold tracking-[-0.02em] m-0 mb-7"
       >
         How It Works
       </h2>
+
       <ol
         class="list-none m-0 mb-4 p-0 grid gap-4"
         style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));"
@@ -140,11 +129,13 @@ const totalWeight = Object.values(RARITY_WEIGHTS).reduce((a, b) => a + b, 0);
               heading: 'Click "Surprise Me!"',
               text: 'Hit the button and let the rarity gods decide your fate.',
             },
+
             {
               n: '2',
               heading: 'See a random meaning',
               text: 'Could be common, could be legendary. No two PRs are alike.',
             },
+
             {
               n: '3',
               heading: 'Copy & paste into your PR',
@@ -156,15 +147,17 @@ const totalWeight = Object.values(RARITY_WEIGHTS).reduce((a, b) => a + b, 0);
               style="background: var(--color-surface-raised); border-color: var(--color-border);"
             >
               <span
-                class="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-sm font-extrabold text-white"
                 style="background: var(--color-accent); font-family: var(--font-mono);"
+                class="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-sm font-extrabold text-white"
               >
                 {n}
               </span>
+
               <div class="flex flex-col gap-1">
                 <strong class="text-[0.9375rem] font-bold" style="color: var(--color-text);">
                   {heading}
                 </strong>
+
                 <p class="text-sm m-0 leading-[1.55]" style="color: var(--color-text-muted);">
                   {text}
                 </p>
@@ -173,26 +166,21 @@ const totalWeight = Object.values(RARITY_WEIGHTS).reduce((a, b) => a + b, 0);
           ))
         }
       </ol>
+
       <p class="text-[0.8125rem] m-0 italic" style="color: var(--color-text-faint);">
         Rarity adds extra fun: the lower the odds, the better the story.
       </p>
     </div>
   </div>
 
-  <!-- Stats Bar -->
-  <div
-    class="border-b py-7"
-    style="background: var(--color-surface); border-color: var(--color-border);"
-  >
+  <div class="border-b py-7" style="background: var(--color-surface); border-color: var(--color-border);">
     <div class="container">
       <dl class="flex items-center justify-center gap-4 m-0 p-0 flex-wrap">
         <div class="flex flex-col items-center gap-[0.10rem] px-10 max-sm:px-5">
-          <dt
-            class="text-[0.75rem] font-semibold tracking-[0.06em] uppercase"
-            style="color: var(--color-text-faint);"
-          >
+          <dt style="color: var(--color-text-faint);" class="text-[0.75rem] font-semibold tracking-[0.06em] uppercase">
             meanings collected
           </dt>
+
           <dd
             class="text-[2rem] font-extrabold m-0 tracking-[-0.03em]"
             style="color: var(--color-text); font-variant-numeric: tabular-nums;"
@@ -200,18 +188,15 @@ const totalWeight = Object.values(RARITY_WEIGHTS).reduce((a, b) => a + b, 0);
             <CountUp client:visible to={totalEntries} />
           </dd>
         </div>
-        <div
-          class="w-px h-10 flex-shrink-0 max-sm:hidden max-[900px]:hidden"
-          style="background: var(--color-border);"
-        >
+
+        <div class="w-px h-10 flex-shrink-0 max-sm:hidden max-[900px]:hidden" style="background: var(--color-border);">
         </div>
+
         <div class="flex flex-col items-center gap-[0.10rem] px-10 max-sm:px-5">
-          <dt
-            class="text-[0.75rem] font-semibold tracking-[0.06em] uppercase"
-            style="color: var(--color-text-faint);"
-          >
+          <dt style="color: var(--color-text-faint);" class="text-[0.75rem] font-semibold tracking-[0.06em] uppercase">
             flavour categories
           </dt>
+
           <dd
             class="text-[2rem] font-extrabold m-0 tracking-[-0.03em]"
             style="color: var(--color-text); font-variant-numeric: tabular-nums;"
@@ -219,18 +204,15 @@ const totalWeight = Object.values(RARITY_WEIGHTS).reduce((a, b) => a + b, 0);
             <CountUp client:visible to={totalCategories} duration={900} />
           </dd>
         </div>
-        <div
-          class="w-px h-10 flex-shrink-0 max-sm:hidden max-[900px]:hidden"
-          style="background: var(--color-border);"
-        >
+
+        <div class="w-px h-10 flex-shrink-0 max-sm:hidden max-[900px]:hidden" style="background: var(--color-border);">
         </div>
+
         <div class="flex flex-col items-center gap-[0.10rem] px-10 max-sm:px-5">
-          <dt
-            class="text-[0.75rem] font-semibold tracking-[0.06em] uppercase"
-            style="color: var(--color-text-faint);"
-          >
+          <dt style="color: var(--color-text-faint);" class="text-[0.75rem] font-semibold tracking-[0.06em] uppercase">
             rare &amp; hilarious
           </dt>
+
           <dd
             class="text-[2rem] font-extrabold m-0 tracking-[-0.03em]"
             style="color: var(--color-legendary); font-variant-numeric: tabular-nums;"
@@ -242,23 +224,23 @@ const totalWeight = Object.values(RARITY_WEIGHTS).reduce((a, b) => a + b, 0);
     </div>
   </div>
 
-  <!-- A Brief History -->
   <div class="py-16">
     <div class="container">
       <h2
-        class="text-[clamp(1.25rem,3vw,1.625rem)] font-bold tracking-[-0.02em] m-0 mb-7"
         style="color: var(--color-text);"
+        class="text-[clamp(1.25rem,3vw,1.625rem)] font-bold tracking-[-0.02em] m-0 mb-7"
       >
         A Brief History
       </h2>
+
       <div class="history-grid grid gap-4">
         {
           FACTS.map((fact, i) => (
             <div
-              class={`${i >= 3 ? 'col-span-3' : 'col-span-2'} flex flex-col gap-3 rounded-xl border p-6 transition-[border-color,transform] duration-150`}
               style="background: var(--color-surface); border-color: var(--color-border);"
-              onmouseover="this.style.borderColor='color-mix(in srgb, var(--color-accent) 40%, var(--color-border))';this.style.transform='translateY(-1px)';"
               onmouseout="this.style.borderColor='var(--color-border)';this.style.transform='';"
+              class={`${i >= 3 ? 'col-span-3' : 'col-span-2'} flex flex-col gap-3 rounded-xl border p-6 transition-[border-color,transform] duration-150`}
+              onmouseover="this.style.borderColor='color-mix(in srgb, var(--color-accent) 40%, var(--color-border))';this.style.transform='translateY(-1px)';"
             >
               <span
                 class="text-[0.8125rem] font-bold tracking-[0.06em]"
@@ -266,10 +248,8 @@ const totalWeight = Object.values(RARITY_WEIGHTS).reduce((a, b) => a + b, 0);
               >
                 {fact.year}
               </span>
-              <p
-                class="text-[0.9375rem] m-0 leading-relaxed"
-                style="color: var(--color-text-muted);"
-              >
+
+              <p class="text-[0.9375rem] m-0 leading-relaxed" style="color: var(--color-text-muted);">
                 {fact.text}
               </p>
             </div>
@@ -279,30 +259,28 @@ const totalWeight = Object.values(RARITY_WEIGHTS).reduce((a, b) => a + b, 0);
     </div>
   </div>
 
-  <!-- Explore By Category -->
-  <div
-    class="py-16 border-t"
-    style="background: var(--color-surface); border-color: var(--color-border);"
-  >
+  <div class="py-16 border-t" style="background: var(--color-surface); border-color: var(--color-border);">
     <div class="container">
       <h2
-        class="text-[clamp(1.25rem,3vw,1.625rem)] font-bold tracking-[-0.02em] m-0 mb-7"
         style="color: var(--color-text);"
+        class="text-[clamp(1.25rem,3vw,1.625rem)] font-bold tracking-[-0.02em] m-0 mb-7"
       >
         Explore By Category
       </h2>
+
       <div class="grid gap-3" style="grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));">
         {
           categories.map((cat) => (
             <a
               href={`/categories/${cat.name}`}
-              class="flex flex-col gap-2 py-5 px-5 rounded-xl border no-underline transition-[transform,box-shadow,border-color] duration-150"
               style="background: var(--color-surface-raised); border-color: var(--color-border);"
-              onmouseover="this.style.transform='translateY(-2px)';this.style.borderColor='var(--color-accent)';this.style.boxShadow='0 4px 16px color-mix(in srgb, var(--color-accent) 10%, transparent)';"
               onmouseout="this.style.transform='';this.style.borderColor='var(--color-border)';this.style.boxShadow='';"
+              class="flex flex-col gap-2 py-5 px-5 rounded-xl border no-underline transition-[transform,box-shadow,border-color] duration-150"
+              onmouseover="this.style.transform='translateY(-2px)';this.style.borderColor='var(--color-accent)';this.style.boxShadow='0 4px 16px color-mix(in srgb, var(--color-accent) 10%, transparent)';"
             >
               <div class="flex items-center justify-between gap-2">
                 <CategoryBadge category={cat.name} size="md" />
+
                 <span
                   class="text-[0.8125rem] font-semibold"
                   style="color: var(--color-text-faint); font-variant-numeric: tabular-nums;"
@@ -310,6 +288,7 @@ const totalWeight = Object.values(RARITY_WEIGHTS).reduce((a, b) => a + b, 0);
                   {cat.count}
                 </span>
               </div>
+
               <span class="text-[0.8125rem] italic" style="color: var(--color-text-muted);">
                 {cat.tagline}
               </span>
@@ -320,26 +299,21 @@ const totalWeight = Object.values(RARITY_WEIGHTS).reduce((a, b) => a + b, 0);
     </div>
   </div>
 
-  <!-- Rarity Tiers -->
   <div class="py-16 border-t" style="border-color: var(--color-border);">
     <div class="container">
       <h2
-        class="text-[clamp(1.25rem,3vw,1.625rem)] font-bold tracking-[-0.02em] m-0 mb-2"
         style="color: var(--color-text);"
+        class="text-[clamp(1.25rem,3vw,1.625rem)] font-bold tracking-[-0.02em] m-0 mb-2"
       >
         Rarity Tiers
       </h2>
-      <p
-        class="text-[0.9375rem] max-w-[560px] leading-relaxed m-0 mb-7"
-        style="color: var(--color-text-muted);"
-      >
-        Every meaning has a rarity. The draw is weighted: common ones show up more often, legendary
-        ones are genuinely hard to land.
+
+      <p style="color: var(--color-text-muted);" class="text-[0.9375rem] max-w-[560px] leading-relaxed m-0 mb-7">
+        Every meaning has a rarity. The draw is weighted: common ones show up more often, legendary ones are genuinely
+        hard to land.
       </p>
-      <div
-        class="grid gap-[0.875rem]"
-        style="grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));"
-      >
+
+      <div class="grid gap-[0.875rem]" style="grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));">
         {
           RARITIES.map((r) => (
             <div
@@ -347,13 +321,12 @@ const totalWeight = Object.values(RARITY_WEIGHTS).reduce((a, b) => a + b, 0);
             >
               <div class="flex items-baseline justify-between gap-2">
                 <span class="text-base font-bold tracking-[-0.01em]">{r.label}</span>
-                <span
-                  class="text-[0.8125rem] font-bold opacity-70"
-                  style="font-family: var(--font-mono);"
-                >
+
+                <span class="text-[0.8125rem] font-bold opacity-70" style="font-family: var(--font-mono);">
                   {Math.round((r.weight / totalWeight) * 100)}%
                 </span>
               </div>
+
               <p class="text-sm m-0 italic" style="color: var(--color-text-muted);">
                 {r.tagline}
               </p>
@@ -364,34 +337,35 @@ const totalWeight = Object.values(RARITY_WEIGHTS).reduce((a, b) => a + b, 0);
     </div>
   </div>
 
-  <!-- Feeling Lucky CTA -->
-  <div
-    class="py-20 border-t"
-    style="background: var(--color-surface); border-color: var(--color-border);"
-  >
+  <div class="py-20 border-t" style="background: var(--color-surface); border-color: var(--color-border);">
     <div class="container">
       <div class="text-center max-w-[560px] mx-auto">
         <h2
-          class="text-[clamp(1.5rem,4vw,2.25rem)] font-extrabold tracking-[-0.03em] m-0 mb-4"
           style="color: var(--color-text);"
+          class="text-[clamp(1.5rem,4vw,2.25rem)] font-extrabold tracking-[-0.03em] m-0 mb-4"
         >
           Feeling Lucky?
         </h2>
+
         <p class="text-base leading-[1.65] m-0 mb-8" style="color: var(--color-text-muted);">
-          Every spin is different. Share a legendary with your team. Paste a chaotic one into a
-          serious PR. Make code review weird again.
+          Every spin is different. Share a legendary with your team. Paste a chaotic one into a serious PR. Make code
+          review weird again.
         </p>
+
         <div class="flex justify-center gap-4 flex-wrap max-sm:flex-col max-sm:items-center">
           <a
             href="/random"
             class="btn btn-primary py-[0.875rem] px-8 text-base rounded-[10px] max-sm:w-full max-sm:max-w-[280px] max-sm:justify-center"
-            >Surprise Me!</a
           >
+            Surprise Me!
+          </a>
+
           <a
             href="/browse"
             class="btn btn-ghost py-[0.875rem] px-8 text-base rounded-[10px] max-sm:w-full max-sm:max-w-[280px] max-sm:justify-center"
-            >Browse all entries</a
           >
+            Browse all entries
+          </a>
         </div>
       </div>
     </div>
@@ -402,10 +376,12 @@ const totalWeight = Object.values(RARITY_WEIGHTS).reduce((a, b) => a + b, 0);
   .history-grid {
     grid-template-columns: repeat(6, 1fr);
   }
+
   @media (max-width: 639px) {
     .history-grid {
       grid-template-columns: 1fr;
     }
+
     .history-grid > * {
       grid-column: span 1 !important;
     }

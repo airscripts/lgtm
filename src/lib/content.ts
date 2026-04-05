@@ -1,4 +1,4 @@
-import type { Rarity } from './lgtm';
+import type { Rarity } from '@/lib/lgtm';
 
 export const CATEGORY_TAGLINES: Record<string, string> = {
   funny: 'make them laugh',
@@ -46,18 +46,22 @@ export const FACTS = [
     year: '2000s',
     text: 'Developers started writing "LGTM" as quick shorthand approval in mailing list code reviews, faster to type than "looks good to me" in a multi-threaded reply chain.',
   },
+
   {
     year: '2006',
     text: 'Linus Torvalds created Git in two weeks after the Linux kernel community lost access to their previous version control system.',
   },
+
   {
     year: '2012',
     text: 'GitHub shipped pull requests, turning code review from an email thread into a structured, comment-threaded workflow used by millions.',
   },
+
   {
     year: '2019',
     text: 'GitHub added the formal "Approve" button to pull requests, giving LGTM an official home in the review flow.',
   },
+
   {
     year: '2026+',
     text: 'LGTM has escaped the terminal. Developers use it playfully everywhere: Slack, Discord, memes, PRs. Sometimes with very creative alternative meanings.',

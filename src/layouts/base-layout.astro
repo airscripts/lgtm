@@ -1,15 +1,15 @@
 ---
 import '@/styles/global.css';
-import ThemeSwitcher from '@/components/theme-switcher';
 import { SITE_URL, THEME_STORAGE_KEY } from '@/lib/config';
+import { ThemeSwitcher } from '@/components/theme-switcher';
 
-interface Props {
+type Props = {
   title?: string;
-  description?: string;
   ogTitle?: string;
-  ogDescription?: string;
+  description?: string;
   canonicalUrl?: string;
-}
+  ogDescription?: string;
+};
 
 const {
   title = 'LGTM',
@@ -50,28 +50,31 @@ const ogImageUrl = `${SITE_URL}/og-default.png`;
     <script is:inline define:vars={{ THEME_STORAGE_KEY }}>
       (function () {
         try {
-          const storedTheme = localStorage.getItem(THEME_STORAGE_KEY);
-          if (storedTheme === 'light' || storedTheme === 'dark') {
-            document.documentElement.setAttribute('data-theme', storedTheme);
+          const theme = localStorage.getItem(THEME_STORAGE_KEY);
+
+          if (theme === 'light' || theme === 'dark') {
+            document.documentElement.setAttribute('data-theme', theme);
           }
         } catch {
-          // localStorage may be unavailable (e.g. private browsing on some browsers)
+          // Safeguard against localStorage access issues (e.g. private mode, disabled storage).
         }
       })();
     </script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
     <link
-      rel="preload"
       as="style"
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap"
+      rel="preload"
       onload="this.onload=null;this.rel='stylesheet'"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap"
     />
+
     <noscript>
       <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap"
         rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap"
       />
     </noscript>
 
@@ -89,47 +92,55 @@ const ogImageUrl = `${SITE_URL}/og-default.png`;
             <span
               class="text-lg font-semibold tracking-tight"
               style="font-family: var(--font-mono); color: var(--color-accent); letter-spacing: -0.02em;"
-              >LGTM</span
             >
+              LGTM
+            </span>
           </a>
 
           <div class="hidden sm:flex items-center gap-1.5">
             <a
               href="/browse"
-              class="text-[0.9375rem] font-medium px-3 py-1.5 rounded-md no-underline transition-colors duration-150"
               style="color: var(--color-text-muted);"
-              onmouseover="this.style.color='var(--color-text)';this.style.background='var(--color-surface-raised)';"
               onmouseout="this.style.color='var(--color-text-muted)';this.style.background='';"
-              >Browse</a
+              class="text-[0.9375rem] font-medium px-3 py-1.5 rounded-md no-underline transition-colors duration-150"
+              onmouseover="this.style.color='var(--color-text)';this.style.background='var(--color-surface-raised)';"
             >
+              Browse
+            </a>
+
             <a
               href="/categories"
-              class="text-[0.9375rem] font-medium px-3 py-1.5 rounded-md no-underline transition-colors duration-150"
               style="color: var(--color-text-muted);"
-              onmouseover="this.style.color='var(--color-text)';this.style.background='var(--color-surface-raised)';"
               onmouseout="this.style.color='var(--color-text-muted)';this.style.background='';"
-              >Categories</a
+              class="text-[0.9375rem] font-medium px-3 py-1.5 rounded-md no-underline transition-colors duration-150"
+              onmouseover="this.style.color='var(--color-text)';this.style.background='var(--color-surface-raised)';"
             >
+              Categories
+            </a>
+
             <a
               href="/rarities"
-              class="text-[0.9375rem] font-medium px-3 py-1.5 rounded-md no-underline transition-colors duration-150"
               style="color: var(--color-text-muted);"
-              onmouseover="this.style.color='var(--color-text)';this.style.background='var(--color-surface-raised)';"
               onmouseout="this.style.color='var(--color-text-muted)';this.style.background='';"
-              >Rarities</a
+              class="text-[0.9375rem] font-medium px-3 py-1.5 rounded-md no-underline transition-colors duration-150"
+              onmouseover="this.style.color='var(--color-text)';this.style.background='var(--color-surface-raised)';"
             >
+              Rarities
+            </a>
+
             <a href="/random" class="btn-nav-random mr-1">Random</a>
             <ThemeSwitcher client:load />
           </div>
 
           <div class="flex sm:hidden items-center gap-2">
             <ThemeSwitcher client:load />
+
             <button
               id="nav-toggle"
               class="nav-hamburger"
-              aria-label="Toggle navigation"
               aria-expanded="false"
               aria-controls="mobile-menu"
+              aria-label="Toggle navigation"
             >
               <span class="bar bar-top"></span>
               <span class="bar bar-mid"></span>
@@ -159,10 +170,8 @@ const ogImageUrl = `${SITE_URL}/og-default.png`;
       <div class="container">
         <div class="footer-top">
           <div class="footer-brand">
-            <span
-              class="footer-logo"
-              style="font-family: var(--font-mono); color: var(--color-accent);">LGTM</span
-            >
+            <span class="footer-logo" style="font-family: var(--font-mono); color: var(--color-accent);">LGTM</span>
+
             <p class="footer-tagline" style="color: var(--color-text-muted);">
               A playful catalog of alternative meanings for the famous code review acronym.
             </p>
@@ -170,33 +179,21 @@ const ogImageUrl = `${SITE_URL}/og-default.png`;
 
           <div class="footer-nav-cols">
             <div class="footer-nav-col">
-              <span class="footer-col-heading" style="color: var(--color-text-faint);">Explore</span
-              >
-              <a href="/browse" class="footer-link" style="color: var(--color-text-muted);"
-                >Browse All</a
-              >
-              <a href="/categories" class="footer-link" style="color: var(--color-text-muted);"
-                >Categories</a
-              >
-              <a href="/rarities" class="footer-link" style="color: var(--color-text-muted);"
-                >Rarities</a
-              >
+              <span class="footer-col-heading" style="color: var(--color-text-faint);"> Explore </span>
+              <a href="/browse" class="footer-link" style="color: var(--color-text-muted);"> Browse All </a>
+              <a href="/categories" class="footer-link" style="color: var(--color-text-muted);"> Categories </a>
+              <a href="/rarities" class="footer-link" style="color: var(--color-text-muted);"> Rarities </a>
             </div>
+
             <div class="footer-nav-col">
-              <span class="footer-col-heading" style="color: var(--color-text-faint);"
-                >Discover</span
-              >
-              <a href="/random" class="footer-link" style="color: var(--color-text-muted);"
-                >Random Entry</a
-              >
-              <a
-                href="/rarities/legendary"
-                class="footer-link"
-                style="color: var(--color-text-muted);">Legendary Tier</a
-              >
-              <a href="/rarities/epic" class="footer-link" style="color: var(--color-text-muted);"
-                >Epic Tier</a
-              >
+              <span class="footer-col-heading" style="color: var(--color-text-faint);"> Discover </span>
+              <a href="/random" class="footer-link" style="color: var(--color-text-muted);"> Random Entry </a>
+
+              <a class="footer-link" href="/rarities/legendary" style="color: var(--color-text-muted);">
+                Legendary Tier
+              </a>
+
+              <a href="/rarities/epic" class="footer-link" style="color: var(--color-text-muted);"> Epic Tier </a>
             </div>
           </div>
         </div>
@@ -207,20 +204,23 @@ const ogImageUrl = `${SITE_URL}/og-default.png`;
           <p class="footer-copy" style="color: var(--color-text-faint);">
             &copy; {new Date().getFullYear()} LGTM. Star on
             <a
-              href="https://github.com/airscripts/lgtm"
               target="_blank"
-              rel="noopener noreferrer"
               class="footer-ext-link"
-              style="color: var(--color-text-muted);">GitHub</a
-            >.
+              rel="noopener noreferrer"
+              style="color: var(--color-text-muted);"
+              href="https://github.com/airscripts/lgtm"
+            >
+              GitHub
+            </a>.
           </p>
+
           <p class="footer-copy" style="color: var(--color-text-faint);">
             Built by
             <a
-              href="https://airscript.it"
               target="_blank"
-              rel="noopener noreferrer"
               class="footer-ext-link"
+              rel="noopener noreferrer"
+              href="https://airscript.it"
               style="color: var(--color-text-muted);">Airscript</a
             >.
           </p>
@@ -258,229 +258,258 @@ const ogImageUrl = `${SITE_URL}/og-default.png`;
 </html>
 
 <style>
-  /* ── Random button: pill that sits at the same line-height as nav text ── */
   .btn-nav-random {
-    display: inline-flex;
-    align-items: center;
+    border: none;
     gap: 0.375rem;
-    padding: 0.375rem 0.875rem;
-    border-radius: 6px;
-    font-size: 0.9375rem;
+    color: #fff;
+    cursor: pointer;
     font-weight: 600;
     line-height: 1.5;
-    background: var(--color-accent);
-    color: #fff;
+    border-radius: 6px;
+    align-items: center;
+    white-space: nowrap;
+    display: inline-flex;
+    font-size: 0.9375rem;
     text-decoration: none;
+    padding: 0.375rem 0.875rem;
+    background: var(--color-accent);
+
     transition:
       background 0.15s ease,
       transform 0.1s ease,
       box-shadow 0.15s ease;
-    border: none;
-    cursor: pointer;
-    white-space: nowrap;
   }
+
   .btn-nav-random:hover {
-    background: var(--color-accent-hover);
     color: #fff;
     text-decoration: none;
     transform: translateY(-1px);
+    background: var(--color-accent-hover);
     box-shadow: 0 4px 12px color-mix(in srgb, var(--color-accent) 40%, transparent);
   }
+
   .btn-nav-random:active {
     transform: translateY(0);
   }
 
-  /* ── Hamburger ── */
   .nav-hamburger {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
     gap: 5px;
     width: 2rem;
     height: 2rem;
-    padding: 0.25rem;
-    background: transparent;
     border: none;
+    display: flex;
     cursor: pointer;
+    padding: 0.25rem;
     border-radius: 6px;
+    flex-direction: column;
+    justify-content: center;
+    background: transparent;
     transition: background 0.15s ease;
   }
+
   .nav-hamburger:hover {
     background: var(--color-surface-raised);
   }
+
   .bar {
-    display: block;
     width: 100%;
     height: 2px;
+    display: block;
     border-radius: 2px;
-    background: var(--color-text-muted);
     transform-origin: center;
+    background: var(--color-text-muted);
+
     transition:
       transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
       opacity 0.25s ease,
       width 0.25s ease;
   }
 
-  /* X state */
   .nav-hamburger.is-open .bar-top {
     transform: translateY(7px) rotate(45deg);
   }
+
   .nav-hamburger.is-open .bar-mid {
     opacity: 0;
     transform: scaleX(0);
   }
+
   .nav-hamburger.is-open .bar-bot {
     transform: translateY(-7px) rotate(-45deg);
   }
 
-  /* ── Mobile drawer ── */
   .mobile-menu {
-    overflow: hidden;
+    opacity: 0;
     max-height: 0;
+    overflow: hidden;
+    border-top: 1px solid transparent;
+
     transition:
       max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1),
       opacity 0.25s ease;
-    opacity: 0;
-    border-top: 1px solid transparent;
   }
+
   .mobile-menu.is-open {
-    max-height: 22rem;
     opacity: 1;
+    max-height: 22rem;
     border-top-color: var(--color-border);
   }
+
   .mobile-menu-inner {
     display: flex;
-    flex-direction: column;
     gap: 0.125rem;
+    flex-direction: column;
     padding: 0.75rem 0 1rem;
   }
+
   .mobile-nav-link {
     display: block;
     font-size: 1rem;
     font-weight: 500;
-    padding: 0.625rem 0.5rem;
     border-radius: 8px;
-    color: var(--color-text-muted);
     text-decoration: none;
+    padding: 0.625rem 0.5rem;
+    color: var(--color-text-muted);
+
     transition:
       color 0.15s ease,
       background 0.15s ease;
   }
+
   .mobile-nav-link:hover {
+    text-decoration: none;
     color: var(--color-text);
     background: var(--color-surface-raised);
-    text-decoration: none;
   }
+
   .mobile-nav-random {
-    display: inline-flex;
-    align-self: flex-start;
-    align-items: center;
-    margin-top: 0.5rem;
-    padding: 0.5rem 1.25rem;
-    border-radius: 8px;
-    font-size: 0.9375rem;
-    font-weight: 600;
-    background: var(--color-accent);
     color: #fff;
+    font-weight: 600;
+    margin-top: 0.5rem;
+    border-radius: 8px;
+    align-items: center;
+    display: inline-flex;
+    font-size: 0.9375rem;
     text-decoration: none;
+    align-self: flex-start;
+    padding: 0.5rem 1.25rem;
+    background: var(--color-accent);
+
     transition:
       background 0.15s ease,
       transform 0.1s ease;
   }
+
   .mobile-nav-random:hover {
-    background: var(--color-accent-hover);
     color: #fff;
     text-decoration: none;
     transform: translateY(-1px);
+    background: var(--color-accent-hover);
   }
 
-  /* ── Footer ── */
   .footer-root {
     padding: 3rem 0 1.75rem;
   }
+
   .footer-top {
-    display: grid;
-    grid-template-columns: 1fr auto;
     gap: 3rem;
+    display: grid;
     align-items: start;
+    grid-template-columns: 1fr auto;
   }
+
   @media (max-width: 639px) {
     .footer-top {
-      grid-template-columns: 1fr;
       gap: 2rem;
+      grid-template-columns: 1fr;
     }
   }
+
   .footer-brand {
     display: flex;
-    flex-direction: column;
     gap: 0.625rem;
     max-width: 320px;
+    flex-direction: column;
   }
+
   .footer-logo {
     font-size: 1rem;
     font-weight: 700;
     letter-spacing: -0.02em;
   }
+
   .footer-tagline {
-    font-size: 0.8125rem;
-    line-height: 1.6;
     margin: 0;
+    line-height: 1.6;
+    font-size: 0.8125rem;
   }
+
   .footer-nav-cols {
-    display: flex;
     gap: 3rem;
+    display: flex;
   }
+
   @media (max-width: 639px) {
     .footer-nav-cols {
       gap: 2rem;
     }
   }
+
   .footer-nav-col {
+    gap: 0.625rem;
     display: flex;
     flex-direction: column;
-    gap: 0.625rem;
   }
+
   .footer-col-heading {
-    font-size: 0.6875rem;
     font-weight: 700;
+    font-size: 0.6875rem;
     letter-spacing: 0.1em;
-    text-transform: uppercase;
     margin-bottom: 0.25rem;
+    text-transform: uppercase;
   }
+
   .footer-link {
     font-size: 0.875rem;
     text-decoration: none;
     transition: color 0.15s ease;
   }
+
   .footer-link:hover {
-    color: var(--color-text) !important;
     text-decoration: none;
+    color: var(--color-text) !important;
   }
+
   .footer-divider {
     height: 1px;
     margin: 2rem 0 1.25rem;
   }
+
   .footer-bottom {
+    gap: 0.5rem;
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 0.5rem;
   }
+
   .footer-copy {
-    font-size: 0.8125rem;
     margin: 0;
+    font-size: 0.8125rem;
   }
+
   .footer-ext-link {
     text-decoration: none;
     border-bottom: 1px solid var(--color-border);
+
     transition:
       color 0.15s ease,
       border-color 0.15s ease;
   }
+
   .footer-ext-link:hover {
+    text-decoration: none;
     color: var(--color-text) !important;
     border-color: var(--color-text-muted);
-    text-decoration: none;
   }
 </style>

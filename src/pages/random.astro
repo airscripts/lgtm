@@ -11,6 +11,7 @@ const weightsJson = JSON.stringify(RARITY_WEIGHTS);
   <div class="random-page">
     <div class="container">
       <p class="redirecting">Picking a random LGTM&hellip;</p>
+
       <noscript>
         <p>
           JavaScript is required to pick a random entry.
@@ -26,6 +27,7 @@ const weightsJson = JSON.stringify(RARITY_WEIGHTS);
     try {
       const entries = JSON.parse(entriesJson);
       const weights = JSON.parse(weightsJson);
+
       if (!entries || entries.length === 0) {
         window.location.replace('/browse');
         return;
@@ -40,6 +42,7 @@ const weightsJson = JSON.stringify(RARITY_WEIGHTS);
       for (let i = 0; i < entries.length; i++) {
         const weight = weights[entries[i].rarity] || weights.common;
         remaining -= weight;
+
         if (remaining <= 0) {
           window.location.replace('/lgtm/' + entries[i].id);
           return;
@@ -61,8 +64,8 @@ const weightsJson = JSON.stringify(RARITY_WEIGHTS);
 
   .redirecting {
     font-size: 1.125rem;
-    color: var(--color-text-muted);
     font-family: var(--font-mono);
+    color: var(--color-text-muted);
     animation: blink 1s step-end infinite;
   }
 

@@ -1,13 +1,13 @@
 ---
-import BaseLayout from '@/layouts/base-layout.astro';
-import BreadcrumbBar from '@/components/breadcrumb-bar.astro';
-import RarityBadge from '@/components/rarity-badge.astro';
-import CategoryBadge from '@/components/category-badge.astro';
-import CopyShareButton from '@/components/copy-share-button';
-import LegendaryEffect from '@/components/legendary-effect';
-import { getAllEntries } from '@/lib/lgtm';
 import { SITE_URL } from '@/lib/config';
-import type { Rarity } from '@/lib/lgtm';
+import { getAllEntries } from '@/lib/lgtm';
+import type { Rarity, LGTMEntry } from '@/lib/lgtm';
+import BaseLayout from '@/layouts/base-layout.astro';
+import RarityBadge from '@/components/rarity-badge.astro';
+import BreadcrumbBar from '@/components/breadcrumb-bar.astro';
+import CategoryBadge from '@/components/category-badge.astro';
+import { LegendaryEffect } from '@/components/legendary-effect';
+import { CopyShareButton } from '@/components/copy-share-button';
 
 export async function getStaticPaths() {
   const entries = getAllEntries();
@@ -18,13 +18,30 @@ export async function getStaticPaths() {
   }));
 }
 
+function pageDescription(e: LGTMEntry): string {
+  return e.description ?? `LGTM means "${e.meaning}", a ${e.rarity} ${e.category} interpretation.`;
+}
+
+function ogDescription(e: LGTMEntry): string {
+  return e.description ?? `A ${e.rarity} LGTM interpretation: "${e.meaning}"`;
+}
+
+function adjacentEntries(entries: LGTMEntry[], id: number) {
+  const index = entries.findIndex((e) => e.id === id);
+  const prev = index > 0 ? entries[index - 1] : null;
+  const next = index < entries.length - 1 ? entries[index + 1] : null;
+  return { prev, next };
+}
+
+function hasTags(e: LGTMEntry): boolean {
+  return (e.tags?.length ?? 0) > 0;
+}
+
 const { entry } = Astro.props;
 const shareUrl = `${SITE_URL}/lgtm/${entry.id}`;
 
 const allEntries = getAllEntries();
-const currentIndex = allEntries.findIndex((e) => e.id === entry.id);
-const prevEntry = currentIndex > 0 ? allEntries[currentIndex - 1] : null;
-const nextEntry = currentIndex < allEntries.length - 1 ? allEntries[currentIndex + 1] : null;
+const { prev: prevEntry, next: nextEntry } = adjacentEntries(allEntries, entry.id);
 
 const rarityBg: Record<string, string> = {
   common: 'color-mix(in srgb, var(--color-common) 6%, var(--color-bg))',
@@ -35,39 +52,29 @@ const rarityBg: Record<string, string> = {
 ---
 
 <BaseLayout
-  title={`LGTM: ${entry.meaning}`}
-  description={entry.description ??
-    `LGTM means "${entry.meaning}", a ${entry.rarity} ${entry.category} interpretation.`}
-  ogTitle={`LGTM: ${entry.meaning}`}
-  ogDescription={entry.description ?? `A ${entry.rarity} LGTM interpretation: "${entry.meaning}"`}
   canonicalUrl={shareUrl}
+  title={`LGTM: ${entry.meaning}`}
+  ogTitle={`LGTM: ${entry.meaning}`}
+  description={pageDescription(entry)}
+  ogDescription={ogDescription(entry)}
 >
   {entry.rarity === 'legendary' && <LegendaryEffect client:load />}
 
   <div
+    data-rarity={entry.rarity}
     class="flex flex-1 flex-col transition-[background] duration-300"
     style={`background: ${rarityBg[entry.rarity] ?? 'var(--color-bg)'};`}
-    data-rarity={entry.rarity}
   >
     <BreadcrumbBar
-      items={[
-        { label: 'Home', href: '/' },
-        { label: 'Browse', href: '/browse' },
-        { label: `#${entry.id}` },
-      ]}
+      items={[{ label: 'Home', href: '/' }, { label: 'Browse', href: '/browse' }, { label: `#${entry.id}` }]}
     />
 
-    <div
-      class="flex flex-1 flex-col justify-center max-w-[680px] w-full mx-auto px-5 py-12 pb-8 gap-10"
-    >
+    <div class="flex flex-1 flex-col justify-center max-w-[680px] w-full mx-auto px-5 py-12 pb-8 gap-10">
       <div class="flex flex-col flex-1 animate-up">
         <div class="flex gap-2 flex-wrap mb-8">
           <RarityBadge rarity={entry.rarity as Rarity} size="lg" />
-          <CategoryBadge
-            category={entry.category}
-            size="md"
-            href={`/categories/${entry.category}`}
-          />
+
+          <CategoryBadge category={entry.category} size="md" href={`/categories/${entry.category}`} />
         </div>
 
         <p
@@ -76,28 +83,26 @@ const rarityBg: Record<string, string> = {
         >
           LGTM
         </p>
+
         <h1
-          class="text-[clamp(1.875rem,6vw,2.5rem)] font-extrabold leading-[1.1] tracking-[-0.03em] m-0 mb-6"
           style="color: var(--color-text);"
+          class="text-[clamp(1.875rem,6vw,2.5rem)] font-extrabold leading-[1.1] tracking-[-0.03em] m-0 mb-6"
         >
           {entry.meaning}
         </h1>
 
         {
           entry.description && (
-            <p
-              class="text-[1.0625rem] leading-[1.7] m-0 mb-6 max-w-[55ch]"
-              style="color: var(--color-text-muted);"
-            >
+            <p class="text-[1.0625rem] leading-[1.7] m-0 mb-6 max-w-[55ch]" style="color: var(--color-text-muted);">
               {entry.description}
             </p>
           )
         }
 
         {
-          entry.tags && entry.tags.length > 0 && (
+          hasTags(entry) && (
             <div class="flex flex-wrap gap-[0.4rem] mb-8">
-              {entry.tags.map((tag) => (
+              {entry.tags?.map((tag) => (
                 <span
                   class="text-[0.8125rem] py-[0.25em] px-[0.6em] rounded-md border"
                   style="font-family: var(--font-mono); color: var(--color-text-faint); background: color-mix(in srgb, var(--color-surface) 60%, transparent); border-color: var(--color-border);"
@@ -111,17 +116,20 @@ const rarityBg: Record<string, string> = {
 
         <div class="border-t pt-6" style="border-color: var(--color-border);">
           <p
-            class="text-[0.6875rem] font-bold tracking-[0.1em] uppercase m-0 mb-3"
             style="color: var(--color-text-faint);"
+            class="text-[0.6875rem] font-bold tracking-[0.1em] uppercase m-0 mb-3"
           >
             Share this LGTM
           </p>
+
           <div class="flex flex-col gap-3 sm:flex-row sm:items-stretch">
             <code
               class="text-[0.8125rem] py-[0.625rem] px-[1.25rem] rounded-md border flex-1 min-w-0 flex items-center break-all"
               style="font-family: var(--font-mono); color: var(--color-text-muted); background: color-mix(in srgb, var(--color-surface) 70%, transparent); border-color: var(--color-border);"
-              >{shareUrl}</code
             >
+              {shareUrl}
+            </code>
+
             <CopyShareButton client:load url={shareUrl} />
           </div>
         </div>
@@ -132,24 +140,26 @@ const rarityBg: Record<string, string> = {
           prevEntry ? (
             <a
               href={`/lgtm/${prevEntry.id}`}
-              class="flex items-center gap-3 py-[0.875rem] px-4 rounded-xl border no-underline transition-[border-color,transform,background,box-shadow] duration-150 min-w-0 overflow-hidden"
               style="background: color-mix(in srgb, var(--color-surface) 70%, transparent); border-color: var(--color-border);"
-              onmouseover="this.style.borderColor='var(--color-accent)';this.style.background='color-mix(in srgb, var(--color-surface) 90%, transparent)';this.style.transform='translateY(-1px)';this.style.boxShadow='0 2px 12px color-mix(in srgb, var(--color-accent) 10%, transparent)';"
+              class="flex items-center gap-3 py-[0.875rem] px-4 rounded-xl border no-underline transition-[border-color,transform,background,box-shadow] duration-150 min-w-0 overflow-hidden"
               onmouseout="this.style.borderColor='var(--color-border)';this.style.background='color-mix(in srgb, var(--color-surface) 70%, transparent)';this.style.transform='';this.style.boxShadow='';"
+              onmouseover="this.style.borderColor='var(--color-accent)';this.style.background='color-mix(in srgb, var(--color-surface) 90%, transparent)';this.style.transform='translateY(-1px)';this.style.boxShadow='0 2px 12px color-mix(in srgb, var(--color-accent) 10%, transparent)';"
             >
               <span class="text-lg flex-shrink-0" style="color: var(--color-text-faint);">
                 &larr;
               </span>
+
               <span class="flex flex-col gap-[0.125rem] min-w-0 overflow-hidden">
                 <span
-                  class="text-[0.6875rem] font-semibold uppercase tracking-[0.08em]"
                   style="color: var(--color-text-faint);"
+                  class="text-[0.6875rem] font-semibold uppercase tracking-[0.08em]"
                 >
                   Previous
                 </span>
+
                 <span
-                  class="text-[0.875rem] font-semibold overflow-hidden text-ellipsis whitespace-nowrap"
                   style="color: var(--color-text);"
+                  class="text-[0.875rem] font-semibold overflow-hidden text-ellipsis whitespace-nowrap"
                 >
                   #{prevEntry.id}
                 </span>
@@ -164,25 +174,27 @@ const rarityBg: Record<string, string> = {
           nextEntry ? (
             <a
               href={`/lgtm/${nextEntry.id}`}
-              class="flex items-center justify-end gap-3 py-[0.875rem] px-4 rounded-xl border no-underline transition-[border-color,transform,background,box-shadow] duration-150 min-w-0 overflow-hidden text-right"
               style="background: color-mix(in srgb, var(--color-surface) 70%, transparent); border-color: var(--color-border);"
-              onmouseover="this.style.borderColor='var(--color-accent)';this.style.background='color-mix(in srgb, var(--color-surface) 90%, transparent)';this.style.transform='translateY(-1px)';this.style.boxShadow='0 2px 12px color-mix(in srgb, var(--color-accent) 10%, transparent)';"
               onmouseout="this.style.borderColor='var(--color-border)';this.style.background='color-mix(in srgb, var(--color-surface) 70%, transparent)';this.style.transform='';this.style.boxShadow='';"
+              class="flex items-center justify-end gap-3 py-[0.875rem] px-4 rounded-xl border no-underline transition-[border-color,transform,background,box-shadow] duration-150 min-w-0 overflow-hidden text-right"
+              onmouseover="this.style.borderColor='var(--color-accent)';this.style.background='color-mix(in srgb, var(--color-surface) 90%, transparent)';this.style.transform='translateY(-1px)';this.style.boxShadow='0 2px 12px color-mix(in srgb, var(--color-accent) 10%, transparent)';"
             >
               <span class="flex flex-col gap-[0.125rem] items-end min-w-0 overflow-hidden">
                 <span
-                  class="text-[0.6875rem] font-semibold uppercase tracking-[0.08em]"
                   style="color: var(--color-text-faint);"
+                  class="text-[0.6875rem] font-semibold uppercase tracking-[0.08em]"
                 >
                   Next
                 </span>
+
                 <span
-                  class="text-[0.875rem] font-semibold overflow-hidden text-ellipsis whitespace-nowrap"
                   style="color: var(--color-text);"
+                  class="text-[0.875rem] font-semibold overflow-hidden text-ellipsis whitespace-nowrap"
                 >
                   #{nextEntry.id}
                 </span>
               </span>
+
               <span class="text-lg flex-shrink-0" style="color: var(--color-text-faint);">
                 &rarr;
               </span>

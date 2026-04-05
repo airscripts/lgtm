@@ -1,15 +1,16 @@
 ---
+import type { Rarity } from '@/lib/lgtm';
+import { RARITY_TAGLINES } from '@/lib/content';
 import BaseLayout from '@/layouts/base-layout.astro';
 import RarityBadge from '@/components/rarity-badge.astro';
-import { RARITY_TAGLINES } from '@/lib/content';
 import { getAllEntries, getAllRarities, RARITY_LABELS } from '@/lib/lgtm';
-import type { Rarity } from '@/lib/lgtm';
 
 const allEntries = getAllEntries();
 const rarities = getAllRarities();
 
 const rarityData = rarities.map((rarity) => {
   const rarityEntries = allEntries.filter((e) => e.rarity === rarity);
+
   return {
     key: rarity,
     label: RARITY_LABELS[rarity] ?? rarity,
@@ -20,39 +21,36 @@ const rarityData = rarities.map((rarity) => {
 });
 ---
 
-<BaseLayout
-  title="LGTM — Rarities"
-  description="Browse LGTM alternative meanings by rarity: common, rare, epic, and legendary."
->
+<BaseLayout title="LGTM" description="Browse LGTM alternative meanings by rarity: common, rare, epic, and legendary.">
   <div class="py-10 pb-16">
     <div class="container">
       <div class="mb-10">
         <h1
-          class="text-[clamp(1.75rem,5vw,2.5rem)] font-extrabold tracking-[-0.03em] mb-3 mt-0"
           style="color: var(--color-text);"
+          class="text-[clamp(1.75rem,5vw,2.5rem)] font-extrabold tracking-[-0.03em] mb-3 mt-0"
         >
           Rarities
         </h1>
-        <p class="text-[1.0625rem] m-0" style="color: var(--color-text-muted);">
-          Browse LGTM meanings by rarity tier.
-        </p>
+
+        <p class="text-[1.0625rem] m-0" style="color: var(--color-text-muted);">Browse LGTM meanings by rarity tier.</p>
       </div>
 
       <div class="grid gap-4" style="grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));">
         {
           rarityData.map(({ key, count, sample }) => (
             <a
-              href={`/rarities/${key}`}
-              class="flex flex-col gap-4 p-6 rounded-[14px] border no-underline transition-[border-color,box-shadow,transform] duration-150"
-              style="background: var(--color-surface); border-color: var(--color-border);"
               data-rarity={key}
-              onmouseover="this.style.borderColor='var(--color-accent)';this.style.boxShadow='0 4px 16px color-mix(in srgb, var(--color-accent) 10%, transparent)';this.style.transform='translateY(-2px)';"
+              href={`/rarities/${key}`}
+              style="background: var(--color-surface); border-color: var(--color-border);"
               onmouseout="this.style.borderColor='var(--color-border)';this.style.boxShadow='';this.style.transform='';"
+              class="flex flex-col gap-4 p-6 rounded-[14px] border no-underline transition-[border-color,box-shadow,transform] duration-150"
+              onmouseover="this.style.borderColor='var(--color-accent)';this.style.boxShadow='0 4px 16px color-mix(in srgb, var(--color-accent) 10%, transparent)';this.style.transform='translateY(-2px)';"
             >
               <div class="flex items-center justify-between gap-2">
                 <span>
                   <RarityBadge rarity={key as Rarity} size="md" />
                 </span>
+
                 <span
                   class="text-[0.8125rem]"
                   style="color: var(--color-text-faint); font-variant-numeric: tabular-nums;"
@@ -60,11 +58,12 @@ const rarityData = rarities.map((rarity) => {
                   {count} entries
                 </span>
               </div>
+
               <div class="flex flex-col gap-[0.375rem]">
                 {sample.map((e) => (
                   <p
-                    class="text-[0.9375rem] m-0 leading-[1.4] italic overflow-hidden text-ellipsis whitespace-nowrap"
                     style="color: var(--color-text-muted);"
+                    class="text-[0.9375rem] m-0 leading-[1.4] italic overflow-hidden text-ellipsis whitespace-nowrap"
                   >
                     &ldquo;{e.meaning}&rdquo;
                   </p>

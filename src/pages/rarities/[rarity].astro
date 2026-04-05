@@ -1,10 +1,10 @@
 ---
-import BaseLayout from '@/layouts/base-layout.astro';
-import BreadcrumbBar from '@/components/breadcrumb-bar.astro';
-import RarityBadge from '@/components/rarity-badge.astro';
-import CategoryEntries from '@/components/category-entries';
-import { getAllEntries, getAllRarities, RARITY_LABELS } from '@/lib/lgtm';
 import type { Rarity } from '@/lib/lgtm';
+import BaseLayout from '@/layouts/base-layout.astro';
+import RarityBadge from '@/components/rarity-badge.astro';
+import BreadcrumbBar from '@/components/breadcrumb-bar.astro';
+import { CategoryEntries } from '@/components/category-entries';
+import { getAllEntries, getAllRarities, RARITY_LABELS } from '@/lib/lgtm';
 
 export async function getStaticPaths() {
   const entries = getAllEntries();
@@ -12,6 +12,7 @@ export async function getStaticPaths() {
 
   return rarities.map((rarity) => ({
     params: { rarity },
+
     props: {
       entries: entries.filter((e) => e.rarity === rarity),
       rarity,
@@ -23,26 +24,23 @@ const { entries, rarity } = Astro.props;
 const label = RARITY_LABELS[rarity as Rarity] ?? rarity;
 ---
 
-<BaseLayout
-  title={`LGTM — ${label}`}
-  description={`All ${entries.length} LGTM alternative meanings with "${label}" rarity.`}
->
-  <BreadcrumbBar
-    items={[{ label: 'Home', href: '/' }, { label: 'Rarities', href: '/rarities' }, { label }]}
-  />
+<BaseLayout title="LGTM" description={`All ${entries.length} LGTM alternative meanings with "${label}" rarity.`}>
+  <BreadcrumbBar items={[{ label: 'Home', href: '/' }, { label: 'Rarities', href: '/rarities' }, { label }]} />
 
   <div class="py-10 pb-16">
     <div class="container">
       <div class="mb-6">
         <div class="flex items-center gap-4 flex-wrap mb-2">
           <h1
-            class="text-[clamp(1.75rem,5vw,2.5rem)] font-extrabold tracking-[-0.03em] m-0"
             style="color: var(--color-text);"
+            class="text-[clamp(1.75rem,5vw,2.5rem)] font-extrabold tracking-[-0.03em] m-0"
           >
             {label}
           </h1>
+
           <RarityBadge rarity={rarity as Rarity} size="md" />
         </div>
+
         <p class="text-base m-0" style="color: var(--color-text-muted);">
           {entries.length} entries with this rarity.
         </p>
@@ -51,20 +49,23 @@ const label = RARITY_LABELS[rarity as Rarity] ?? rarity;
       <div class="flex gap-6 mb-8">
         <a
           href="/rarities"
-          class="text-[0.9rem] no-underline border-b pb-[2px] transition-colors duration-150"
           style="color: var(--color-text-muted); border-color: var(--color-border);"
+          class="text-[0.9rem] no-underline border-b pb-[2px] transition-colors duration-150"
           onmouseover="this.style.color='var(--color-accent)';this.style.borderColor='var(--color-accent)';"
           onmouseout="this.style.color='var(--color-text-muted)';this.style.borderColor='var(--color-border)';"
-          >&larr; All rarities</a
         >
+          &larr; All rarities
+        </a>
+
         <a
           href="/browse"
-          class="text-[0.9rem] no-underline border-b pb-[2px] transition-colors duration-150"
           style="color: var(--color-text-muted); border-color: var(--color-border);"
+          class="text-[0.9rem] no-underline border-b pb-[2px] transition-colors duration-150"
           onmouseover="this.style.color='var(--color-accent)';this.style.borderColor='var(--color-accent)';"
           onmouseout="this.style.color='var(--color-text-muted)';this.style.borderColor='var(--color-border)';"
-          >Browse all &rarr;</a
         >
+          Browse all &rarr;
+        </a>
       </div>
 
       <CategoryEntries client:load entries={entries} />

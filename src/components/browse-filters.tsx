@@ -1,14 +1,16 @@
+'use client';
+import { Search, X } from 'lucide-react';
 import { PAGE_SIZE } from '@/lib/config';
 import { useState, useMemo } from 'react';
-import Pagination from '@/components/pagination';
+import type { CSSProperties } from 'react';
 import type { LGTMEntry, Rarity } from '@/lib/lgtm';
+import { Pagination } from '@/components/pagination';
 import { RARITY_LABELS, CATEGORY_LABELS, getAllRarities } from '@/lib/lgtm';
 import { CATEGORY_COLORS, RARITY_COLORS, RARITY_ORDER } from '@/lib/content';
-import { Search, X } from 'lucide-react';
 
-interface Props {
+export type BrowseFiltersProps = {
   entries: LGTMEntry[];
-}
+};
 
 type SortOption = 'alpha' | 'rarity-asc' | 'rarity-desc' | 'newest';
 
@@ -19,12 +21,37 @@ const SORT_LABELS: Record<SortOption, string> = {
   newest: 'Newest First',
 };
 
+function matchesSearch(entry: LGTMEntry, query: string): boolean {
+  return (
+    entry.meaning.toLowerCase().includes(query) ||
+    (entry.description?.toLowerCase().includes(query) ?? false) ||
+    (entry.tags?.some((tag) => tag.toLowerCase().includes(query)) ?? false)
+  );
+}
+
+function rarityOrder(rarity: Rarity): number {
+  return RARITY_ORDER[rarity] ?? 0;
+}
+
+function isFiltered(search: string, activeCategories: Set<string>, activeRarities: Set<string>): boolean {
+  return search.trim().length > 0 || activeCategories.size > 0 || activeRarities.size > 0;
+}
+
+function filterButtonStyle(active: boolean, color: string): CSSProperties {
+  return {
+    color: active ? color : 'var(--color-text-muted)',
+    border: `1.5px solid ${active ? color : 'var(--color-border)'}`,
+
+    background: active ? `color-mix(in srgb, ${color} 12%, var(--color-surface))` : 'var(--color-surface)',
+  };
+}
+
 function RarityDot({ rarity }: { rarity: Rarity }) {
   return (
     <span
-      aria-hidden="true"
       style={{ background: RARITY_COLORS[rarity] }}
       className="inline-block w-2 h-2 rounded-full flex-shrink-0 mt-[1px]"
+      aria-hidden="true"
     />
   );
 }
@@ -81,7 +108,7 @@ function EntryRow({ entry }: { entry: LGTMEntry }) {
           {RARITY_LABELS[entry.rarity as Rarity]}
         </span>
 
-        <span className="text-xs font-medium py-[0.15em] px-[0.45em]" style={{ color }}>
+        <span style={{ color }} className="text-xs font-medium py-[0.15em] px-[0.45em]">
           {CATEGORY_LABELS[entry.category] ?? entry.category}
         </span>
       </div>
@@ -89,11 +116,8 @@ function EntryRow({ entry }: { entry: LGTMEntry }) {
   );
 }
 
-export default function BrowseFilters({ entries }: Props) {
-  const allCategories = useMemo(
-    () => [...new Set(entries.map((entry) => entry.category))].sort(),
-    [entries],
-  );
+export function BrowseFilters({ entries }: BrowseFiltersProps) {
+  const allCategories = useMemo(() => [...new Set(entries.map((entry) => entry.category))].sort(), [entries]);
 
   const allRarities = getAllRarities();
   const [search, setSearch] = useState('');
@@ -139,13 +163,7 @@ export default function BrowseFilters({ entries }: Props) {
 
     if (search.trim()) {
       const searchQuery = search.toLowerCase();
-
-      result = result.filter(
-        (entry) =>
-          entry.meaning.toLowerCase().includes(searchQuery) ||
-          entry.description?.toLowerCase().includes(searchQuery) ||
-          entry.tags?.some((tag) => tag.toLowerCase().includes(searchQuery)),
-      );
+      result = result.filter((entry) => matchesSearch(entry, searchQuery));
     }
 
     if (activeCategories.size > 0) {
@@ -162,10 +180,10 @@ export default function BrowseFilters({ entries }: Props) {
           return a.meaning.localeCompare(b.meaning);
 
         case 'rarity-asc':
-          return (RARITY_ORDER[a.rarity as Rarity] ?? 0) - (RARITY_ORDER[b.rarity as Rarity] ?? 0);
+          return rarityOrder(a.rarity as Rarity) - rarityOrder(b.rarity as Rarity);
 
         case 'rarity-desc':
-          return (RARITY_ORDER[b.rarity as Rarity] ?? 0) - (RARITY_ORDER[a.rarity as Rarity] ?? 0);
+          return rarityOrder(b.rarity as Rarity) - rarityOrder(a.rarity as Rarity);
 
         case 'newest':
           return (b.created_at ?? '').localeCompare(a.created_at ?? '');
@@ -180,7 +198,7 @@ export default function BrowseFilters({ entries }: Props) {
   const clampedPage = Math.min(page, totalPages);
   const pageStart = (clampedPage - 1) * PAGE_SIZE;
   const paginated = filtered.slice(pageStart, pageStart + PAGE_SIZE);
-  const hasFilters = search.trim() || activeCategories.size > 0 || activeRarities.size > 0;
+  const hasFilters = isFiltered(search, activeCategories, activeRarities);
 
   function clearAll() {
     setSearch('');
@@ -194,12 +212,46 @@ export default function BrowseFilters({ entries }: Props) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
+  function renderResults() {
+    if (filtered.length === 0) {
+      return (
+        <div style={{ color: 'var(--color-text-muted)' }} className="text-center py-12 px-4">
+          <div className="flex justify-center mb-4">
+            <X size={64} className="text-center" />
+          </div>
+
+          <p className="m-0 text-[0.9rem]">No entries match your filters.</p>
+
+          <button
+            onClick={clearAll}
+            style={{ color: 'var(--color-accent)', background: 'none' }}
+            className="mt-2 text-[0.9rem] bg-none border-none cursor-pointer underline"
+          >
+            Clear all filters
+          </button>
+        </div>
+      );
+    }
+
+    return (
+      <>
+        <div className="flex flex-col gap-2">
+          {paginated.map((entry) => (
+            <EntryRow key={entry.id} entry={entry} />
+          ))}
+        </div>
+
+        <Pagination page={clampedPage} totalPages={totalPages} onPage={handlePageChange} />
+      </>
+    );
+  }
+
   return (
     <div className="flex flex-col gap-6">
       <div className="relative">
         <span
-          className="absolute left-4 top-1/2 -translate-y-1/2 text-base pointer-events-none"
           style={{ color: 'var(--color-text-faint)' }}
+          className="absolute left-4 top-1/2 -translate-y-1/2 text-base pointer-events-none"
         >
           <Search size={18} aria-hidden="true" />
         </span>
@@ -211,14 +263,14 @@ export default function BrowseFilters({ entries }: Props) {
           onBlur={(e) => (e.target.style.borderColor = 'var(--color-border)')}
           onFocus={(e) => (e.target.style.borderColor = 'var(--color-accent)')}
           className="w-full py-3 pl-10 pr-4 text-[0.9375rem] rounded-[10px] border outline-none transition-[border-color] duration-150 box-border"
-          onChange={(e) => {
-            setSearch(e.target.value);
-            setPage(1);
-          }}
           style={{
             color: 'var(--color-text)',
             background: 'var(--color-surface)',
             borderColor: 'var(--color-border)',
+          }}
+          onChange={(e) => {
+            setSearch(e.target.value);
+            setPage(1);
           }}
         />
       </div>
@@ -240,14 +292,8 @@ export default function BrowseFilters({ entries }: Props) {
               <button
                 key={category}
                 onClick={() => toggleCategory(category)}
+                style={filterButtonStyle(active, color)}
                 className="text-[0.8125rem] font-medium py-[0.3em] px-[0.75em] rounded-[20px] cursor-pointer transition-all duration-150"
-                style={{
-                  color: active ? color : 'var(--color-text-muted)',
-                  border: `1.5px solid ${active ? color : 'var(--color-border)'}`,
-                  background: active
-                    ? `color-mix(in srgb, ${color} 12%, var(--color-surface))`
-                    : 'var(--color-surface)',
-                }}
               >
                 {CATEGORY_LABELS[category] ?? category}
               </button>
@@ -271,14 +317,8 @@ export default function BrowseFilters({ entries }: Props) {
               <button
                 key={rarity}
                 onClick={() => toggleRarity(rarity)}
+                style={filterButtonStyle(active, color)}
                 className="text-[0.8125rem] font-semibold py-[0.3em] px-[0.75em] rounded-[20px] cursor-pointer transition-all duration-150 tracking-[0.03em] uppercase inline-flex items-center gap-[0.3em]"
-                style={{
-                  color: active ? color : 'var(--color-text-muted)',
-                  border: `1.5px solid ${active ? color : 'var(--color-border)'}`,
-                  background: active
-                    ? `color-mix(in srgb, ${color} 12%, var(--color-surface))`
-                    : 'var(--color-surface)',
-                }}
               >
                 {RARITY_LABELS[rarity]}
               </button>
@@ -291,11 +331,10 @@ export default function BrowseFilters({ entries }: Props) {
         style={{ borderColor: 'var(--color-border)' }}
         className="flex items-center justify-between flex-wrap gap-3 pb-3 border-b"
       >
-        <p className="m-0 text-sm" style={{ color: 'var(--color-text-muted)' }}>
-          <strong style={{ color: 'var(--color-text)' }}>{filtered.length}</strong> of{' '}
-          {entries.length} entries
+        <p style={{ color: 'var(--color-text-muted)' }} className="m-0 text-sm">
+          <strong style={{ color: 'var(--color-text)' }}>{filtered.length}</strong> of {entries.length} entries
           {filtered.length > PAGE_SIZE && (
-            <span className="ml-2" style={{ color: 'var(--color-text-faint)' }}>
+            <span style={{ color: 'var(--color-text-faint)' }} className="ml-2">
               page {clampedPage} of {totalPages}
             </span>
           )}
@@ -311,11 +350,7 @@ export default function BrowseFilters({ entries }: Props) {
         </p>
 
         <div className="flex items-center gap-2">
-          <label
-            htmlFor="sort-select"
-            className="text-[0.8125rem]"
-            style={{ color: 'var(--color-text-muted)' }}
-          >
+          <label htmlFor="sort-select" className="text-[0.8125rem]" style={{ color: 'var(--color-text-muted)' }}>
             Sort:
           </label>
 
@@ -325,22 +360,18 @@ export default function BrowseFilters({ entries }: Props) {
             onBlur={(e) => (e.currentTarget.style.borderColor = 'var(--color-border)')}
             onFocus={(e) => (e.currentTarget.style.borderColor = 'var(--color-accent)')}
             className="text-sm py-[0.3rem] px-[0.6rem] rounded-md border cursor-pointer outline-none transition-colors duration-150"
-            onChange={(e) => {
-              setSort(e.target.value as SortOption);
-              setPage(1);
-            }}
             style={{
               color: 'var(--color-text)',
               background: 'var(--color-surface)',
               borderColor: 'var(--color-border)',
             }}
+            onChange={(e) => {
+              setSort(e.target.value as SortOption);
+              setPage(1);
+            }}
           >
             {Object.entries(SORT_LABELS).map(([key, label]) => (
-              <option
-                key={key}
-                value={key}
-                style={{ background: 'var(--color-surface)', color: 'var(--color-text)' }}
-              >
+              <option key={key} value={key} style={{ background: 'var(--color-surface)', color: 'var(--color-text)' }}>
                 {label}
               </option>
             ))}
@@ -348,32 +379,7 @@ export default function BrowseFilters({ entries }: Props) {
         </div>
       </div>
 
-      {filtered.length === 0 ? (
-        <div className="text-center py-12 px-4" style={{ color: 'var(--color-text-muted)' }}>
-          <div className="flex justify-center mb-4">
-            <X size={64} className="text-center" />
-          </div>
-
-          <p className="m-0 text-[0.9rem]">No entries match your filters.</p>
-          <button
-            onClick={clearAll}
-            className="mt-2 text-[0.9rem] bg-none border-none cursor-pointer underline"
-            style={{ color: 'var(--color-accent)', background: 'none' }}
-          >
-            Clear all filters
-          </button>
-        </div>
-      ) : (
-        <>
-          <div className="flex flex-col gap-2">
-            {paginated.map((entry) => (
-              <EntryRow key={entry.id} entry={entry} />
-            ))}
-          </div>
-
-          <Pagination page={clampedPage} totalPages={totalPages} onPage={handlePageChange} />
-        </>
-      )}
+      {renderResults()}
     </div>
   );
 }

@@ -7,16 +7,16 @@
     "node": ">=24.0.0"
   },
   "scripts": {
-    "dev": "astro dev",
-    "build": "astro build",
-    "preview": "astro preview",
     "astro": "astro",
+    "dev": "astro dev",
     "test": "vitest run",
+    "build": "astro build",
     "test:watch": "vitest",
-    "format": "prettier --write \"src/**/*.{ts,tsx,astro,css,json}\" \"*.{mjs,json}\"",
-    "format:check": "prettier --check \"src/**/*.{ts,tsx,astro,css,json}\" \"*.{mjs,json}\"",
+    "preview": "astro preview",
     "lint": "eslint src --ext .ts,.tsx,.astro",
-    "lint:fix": "eslint src --ext .ts,.tsx,.astro --fix"
+    "lint:fix": "eslint src --ext .ts,.tsx,.astro --fix",
+    "format": "prettier --write \"src/**/*.{ts,tsx,astro,css,json}\" \"*.{mjs,json}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,astro,css,json}\" \"*.{mjs,json}\""
   },
   "dependencies": {
     "@astrojs/react": "^5.0.2",
