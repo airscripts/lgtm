@@ -1,5 +1,7 @@
+import { act } from 'react';
 import type { LGTMEntry } from '@/lib/lgtm';
 import { makeEntry } from '@/test/fixtures';
+import { COPY_FEEDBACK_MS } from '@/lib/config';
 import { describe, test, expect, vi, beforeEach } from 'vitest';
 import { RandomGenerator } from '@/components/random-generator';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
@@ -7,6 +9,10 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 beforeEach(() => {
   vi.spyOn(window.history, 'pushState').mockImplementation(() => {});
   vi.spyOn(window.history, 'replaceState').mockImplementation(() => {});
+
+  Object.assign(navigator, {
+    clipboard: { writeText: vi.fn().mockResolvedValue(undefined) },
+  });
 });
 
 const entries: LGTMEntry[] = [
@@ -102,5 +108,73 @@ describe('random generator', () => {
       },
       { timeout: 500 },
     );
+  });
+
+  test('should not show description when entry has no description', () => {
+    render(<RandomGenerator entries={entries} initialEntry={makeEntry({ description: undefined })} />);
+    expect(screen.queryByText('The original, the classic.')).not.toBeInTheDocument();
+  });
+
+  test('should not show tags when entry has no tags', () => {
+    render(<RandomGenerator entries={entries} initialEntry={makeEntry({ tags: undefined })} />);
+    expect(screen.queryByText(/#\w/)).not.toBeInTheDocument();
+  });
+
+  test('should call navigator.clipboard.writeText with the share url on copy click', async () => {
+    render(<RandomGenerator entries={entries} initialEntry={entries[1]} />);
+    fireEvent.click(screen.getByText(/Copy link/i));
+
+    await waitFor(() => {
+      expect(navigator.clipboard.writeText).toHaveBeenCalledWith(expect.stringContaining('/lgtm/2'));
+    });
+  });
+
+  test('should show "Copied!" after clicking copy link', async () => {
+    render(<RandomGenerator entries={entries} initialEntry={entries[0]} />);
+    fireEvent.click(screen.getByText(/Copy link/i));
+
+    await waitFor(() => {
+      expect(screen.getByText('Copied!')).toBeInTheDocument();
+    });
+  });
+
+  test('should revert copy button to "Copy link" after COPY_FEEDBACK_MS', async () => {
+    vi.useFakeTimers();
+
+    render(<RandomGenerator entries={entries} initialEntry={entries[0]} />);
+
+    await act(async () => {
+      fireEvent.click(screen.getByText(/Copy link/i));
+      await Promise.resolve();
+    });
+
+    expect(screen.getByText('Copied!')).toBeInTheDocument();
+
+    await act(async () => {
+      vi.advanceTimersByTime(COPY_FEEDBACK_MS + 50);
+    });
+
+    expect(screen.getByText('Copy link')).toBeInTheDocument();
+    vi.useRealTimers();
+  });
+
+  test('should disable the generate button while animating', async () => {
+    vi.useFakeTimers();
+
+    render(<RandomGenerator entries={entries} initialEntry={entries[0]} />);
+    const btn = screen.getByRole('button', { name: /Generate another/i });
+
+    await act(async () => {
+      fireEvent.click(btn);
+    });
+
+    expect(btn).toBeDisabled();
+
+    await act(async () => {
+      vi.runAllTimers();
+    });
+
+    expect(btn).not.toBeDisabled();
+    vi.useRealTimers();
   });
 });

@@ -105,8 +105,9 @@ export const MASCOT_LINES: Record<MascotContext, string[]> = {
 
 export function pickLine(context: MascotContext, exclude?: string): string {
   const lines = MASCOT_LINES[context];
-  const available = exclude ? lines.filter((l) => l !== exclude) : lines;
-  return available[Math.floor(Math.random() * available.length)];
+  const filtered = exclude ? lines.filter((l) => l !== exclude) : lines;
+  const pool = filtered.length > 0 ? filtered : lines;
+  return pool[Math.floor(Math.random() * pool.length)]!;
 }
 
 export function contextFromPath(pathname: string): MascotContext {
