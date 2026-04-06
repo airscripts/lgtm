@@ -1,9 +1,11 @@
+import type { Rarity } from '@/lib/lgtm';
 import { pickLine } from '@/lib/mascot-lines';
 import userEvent from '@testing-library/user-event';
 import { describe, test, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, within, fireEvent, act } from '@testing-library/react';
 
 vi.mock('@/lib/mascot-lines', async (importOriginal) => {
+  // eslint-disable-next-line @typescript-eslint/consistent-type-imports
   const actual = await importOriginal<typeof import('@/lib/mascot-lines')>();
   return { ...actual, pickLine: vi.fn(actual.pickLine) };
 });
@@ -44,7 +46,7 @@ describe('mascot component', () => {
     vi.unstubAllGlobals();
   });
 
-  async function renderMascot(props: { rarity?: import('@/lib/lgtm').Rarity; isIndex?: boolean } = {}) {
+  async function renderMascot(props: { rarity?: Rarity; isIndex?: boolean } = {}) {
     const { Mascot } = await import('@/components/mascot');
     return render(<Mascot {...props} />);
   }
