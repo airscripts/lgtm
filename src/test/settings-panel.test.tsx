@@ -48,7 +48,7 @@ describe('settings panel', () => {
     expect(screen.getByText('Mascot')).toBeInTheDocument();
     expect(screen.getByText('Confetti')).toBeInTheDocument();
     expect(screen.getByText('Animations')).toBeInTheDocument();
-    expect(screen.getByText('Easter egg')).toBeInTheDocument();
+    expect(screen.getByText('Easter Egg')).toBeInTheDocument();
   });
 
   test('should render theme segmented control with three options', async () => {
