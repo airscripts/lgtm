@@ -23,7 +23,7 @@ const { entries, category } = Astro.props;
 const label = CATEGORY_LABELS[category] ?? category;
 ---
 
-<BaseLayout title="LGTM" description={`All ${entries.length} LGTM alternative meanings in the "${label}" category.`}>
+<BaseLayout title={`LGTM | ${label}`} description={`All ${entries.length} LGTM alternative meanings in the "${label}" category.`}>
   <BreadcrumbBar items={[{ label: 'Home', href: '/' }, { label: 'Categories', href: '/categories' }, { label }]} />
 
   <div class="py-10 pb-16">

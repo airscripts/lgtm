@@ -23,7 +23,7 @@ const { entries, rarity } = Astro.props;
 const label = RARITY_LABELS[rarity as Rarity] ?? rarity;
 ---
 
-<BaseLayout title="LGTM" description={`All ${entries.length} LGTM alternative meanings with "${label}" rarity.`}>
+<BaseLayout title={`LGTM | ${label}`} description={`All ${entries.length} LGTM alternative meanings with "${label}" rarity.`}>
   <BreadcrumbBar items={[{ label: 'Home', href: '/' }, { label: 'Rarities', href: '/rarities' }, { label }]} />
 
   <div class="py-10 pb-16">
