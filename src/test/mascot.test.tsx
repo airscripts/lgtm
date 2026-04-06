@@ -171,6 +171,7 @@ describe('mascot component', () => {
   });
 
   test('should clamp drag position within viewport bounds', async () => {
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
     const { container } = await renderMascot();
     const bot = screen.getByRole('img');
 
@@ -181,6 +182,7 @@ describe('mascot component', () => {
     const posEl = container.querySelector('[style*="position: fixed"]');
     expect(posEl).not.toBeNull();
     void container;
+    consoleError.mockRestore();
   });
 });
 
