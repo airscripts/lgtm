@@ -1,9 +1,10 @@
 import { Search, X } from 'lucide-react';
 import { PAGE_SIZE } from '@/lib/config';
-import { useState, useMemo } from 'react';
 import type { CSSProperties } from 'react';
 import type { LGTMEntry, Rarity } from '@/lib/lgtm';
+import { useState, useMemo, useEffect } from 'react';
 import { Pagination } from '@/components/pagination';
+import { SETTINGS_KEY, loadSettings } from '@/lib/settings';
 import { RARITY_LABELS, CATEGORY_LABELS, getAllRarities } from '@/lib/lgtm';
 import { CATEGORY_COLORS, RARITY_COLORS, RARITY_ORDER } from '@/lib/content';
 
@@ -119,11 +120,25 @@ export function BrowseFilters({ entries }: BrowseFiltersProps) {
   const allCategories = useMemo(() => [...new Set(entries.map((entry) => entry.category))].sort(), [entries]);
 
   const allRarities = getAllRarities();
+  const [pageSize, setPageSize] = useState(PAGE_SIZE);
   const [search, setSearch] = useState('');
   const [activeCategories, setActiveCategories] = useState<Set<string>>(new Set());
   const [activeRarities, setActiveRarities] = useState<Set<string>>(new Set());
   const [sort, setSort] = useState<SortOption>('alpha');
   const [page, setPage] = useState(1);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setPageSize(loadSettings().pageSize);
+
+    function onStorage(e: StorageEvent) {
+      if (e.key !== SETTINGS_KEY) return;
+      setPageSize(loadSettings().pageSize);
+    }
+
+    window.addEventListener('storage', onStorage);
+    return () => window.removeEventListener('storage', onStorage);
+  }, []);
 
   function toggleCategory(category: string) {
     setActiveCategories((prev) => {
@@ -193,10 +208,10 @@ export function BrowseFilters({ entries }: BrowseFiltersProps) {
     });
   }, [entries, search, activeCategories, activeRarities, sort]);
 
-  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
   const clampedPage = Math.min(page, totalPages);
-  const pageStart = (clampedPage - 1) * PAGE_SIZE;
-  const paginated = filtered.slice(pageStart, pageStart + PAGE_SIZE);
+  const pageStart = (clampedPage - 1) * pageSize;
+  const paginated = filtered.slice(pageStart, pageStart + pageSize);
   const hasFilters = isFiltered(search, activeCategories, activeRarities);
 
   function clearAll() {
@@ -332,7 +347,7 @@ export function BrowseFilters({ entries }: BrowseFiltersProps) {
       >
         <p style={{ color: 'var(--color-text-muted)' }} className="m-0 text-sm">
           <strong style={{ color: 'var(--color-text)' }}>{filtered.length}</strong> of {entries.length} entries
-          {filtered.length > PAGE_SIZE && (
+          {filtered.length > pageSize && (
             <span style={{ color: 'var(--color-text-faint)' }} className="ml-2">
               page {clampedPage} of {totalPages}
             </span>
