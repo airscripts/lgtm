@@ -3,6 +3,7 @@ import type { Rarity } from '@/lib/lgtm';
 export const CATEGORY_TAGLINES: Record<string, string> = {
   funny: 'make them laugh',
   nerd: 'for the nerds',
+  mateo: 'only mateo knows',
   chaotic: 'expect the unexpected',
   wholesome: 'spread the love',
   sarcastic: 'say it with sarcasm',
@@ -14,6 +15,7 @@ export const CATEGORY_COLORS: Record<string, string> = {
   funny: '#f59e0b',
   sarcastic: '#ef4444',
   wholesome: '#10b981',
+  mateo: '#ec4899',
   nerd: '#6366f1',
   existential: '#8b5cf6',
   corporate: '#0ea5e9',

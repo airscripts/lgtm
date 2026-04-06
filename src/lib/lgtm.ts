@@ -33,6 +33,7 @@ export const CATEGORY_LABELS: Record<string, string> = {
   sarcastic: 'Sarcastic',
   wholesome: 'Wholesome',
   nerd: 'Nerd',
+  mateo: 'Mateo',
   existential: 'Existential',
   corporate: 'Corporate',
   chaotic: 'Chaotic',
