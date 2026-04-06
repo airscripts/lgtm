@@ -1,5 +1,5 @@
 import { makeEntry } from '@/test/fixtures';
-import type { LGTMEntry } from '@/lib/lgtm';
+import type { LGTMEntry, Rarity } from '@/lib/lgtm';
 import { describe, test, expect, vi, beforeEach } from 'vitest';
 import { weightedRandom, weightedRandomExcluding } from '@/lib/random';
 
@@ -50,6 +50,15 @@ describe('weighted random', () => {
     expect(entries).toContain(result);
     vi.restoreAllMocks();
   });
+
+  test('should use common weight as fallback for an entry with unknown rarity', () => {
+    vi.spyOn(Math, 'random').mockReturnValue(0);
+    const entry = makeEntry({ rarity: 'unknown' as Rarity });
+    const result = weightedRandom([entry]);
+
+    expect(result).toBe(entry);
+    vi.restoreAllMocks();
+  });
 });
 
 describe('weighted random excluding', () => {
@@ -72,5 +81,9 @@ describe('weighted random excluding', () => {
   test('should return the single entry when pool has only one item', () => {
     const single = [makeEntry({ id: 5, rarity: 'epic' })];
     expect(weightedRandomExcluding(single, 5)).toBe(single[0]);
+  });
+
+  test('should throw when entries array is empty', () => {
+    expect(() => weightedRandomExcluding([], 1)).toThrow();
   });
 });

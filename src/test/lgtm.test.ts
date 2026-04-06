@@ -1,3 +1,4 @@
+import type { Rarity } from '@/lib/lgtm';
 import { describe, test, expect, vi, beforeEach } from 'vitest';
 
 import {
@@ -8,6 +9,7 @@ import {
   RARITY_WEIGHTS,
   CATEGORY_LABELS,
   getAllCategories,
+  getEntriesByRarity,
   getEntriesByCategory,
 } from '@/lib/lgtm';
 
@@ -98,6 +100,11 @@ describe('get all categories', () => {
     const cats = getAllCategories();
     expect(new Set(cats).size).toBe(cats.length);
   });
+
+  test('should return categories in alphabetical order', () => {
+    const cats = getAllCategories();
+    expect(cats).toEqual([...cats].sort());
+  });
 });
 
 describe('get all rarities', () => {
@@ -127,5 +134,36 @@ describe('constants', () => {
 
   test('should have a non-empty category labels object', () => {
     expect(Object.keys(CATEGORY_LABELS).length).toBeGreaterThan(0);
+  });
+
+  test('should have a category label for every live category', () => {
+    for (const cat of getAllCategories()) {
+      expect(CATEGORY_LABELS).toHaveProperty(cat);
+    }
+  });
+});
+
+describe('get entries by rarity', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  test('should return only entries of the given rarity', () => {
+    const entries = getEntriesByRarity('common');
+    expect(entries.length).toBeGreaterThan(0);
+
+    for (const e of entries) {
+      expect(e.rarity).toBe('common');
+    }
+  });
+
+  test('should return a non-empty array for each known rarity', () => {
+    for (const rarity of ['common', 'rare', 'epic', 'legendary'] as Rarity[]) {
+      expect(getEntriesByRarity(rarity).length).toBeGreaterThan(0);
+    }
+  });
+
+  test('should return empty array for unknown rarity', () => {
+    expect(getEntriesByRarity('__unknown__' as Rarity)).toHaveLength(0);
   });
 });
