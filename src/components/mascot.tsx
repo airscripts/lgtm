@@ -224,7 +224,7 @@ function armStyle(side: ArmSide, isRaised: boolean): CSSProperties {
     position: 'absolute',
     transformOrigin: 'top center',
     background: 'var(--color-surface)',
-    border: '2px solid var(--color-border)',
+    border: '2px solid var(--color-border-mascot)',
     ...(side === 'left' ? { left: 2 } : { right: 2 }),
     transition: 'transform 0.2s cubic-bezier(0.34,1.56,0.64,1)',
     transform: isRaised ? ARM_TRANSFORM_RAISED[side] : ARM_TRANSFORM_REST[side],
@@ -258,7 +258,7 @@ function bubbleBoxStyle(): CSSProperties {
     color: 'var(--color-text)',
     fontFamily: 'var(--font-mono)',
     background: 'var(--color-surface)',
-    border: '1.5px solid var(--color-border)',
+    border: '1.5px solid var(--color-border-mascot)',
     boxShadow: '0 4px 16px rgba(0,0,0,0.10)',
   };
 }
@@ -272,7 +272,7 @@ function bubbleArrowOuterStyle(): CSSProperties {
     position: 'absolute',
     borderLeft: '8px solid transparent',
     borderRight: '8px solid transparent',
-    borderTop: '9px solid var(--color-border)',
+    borderTop: '9px solid var(--color-border-mascot)',
   };
 }
 
@@ -537,7 +537,7 @@ export function Mascot({ rarity, isIndex }: MascotProps) {
                 position: 'absolute',
                 imageRendering: 'pixelated',
                 background: 'var(--color-surface)',
-                border: '2px solid var(--color-border)',
+                border: '2px solid var(--color-border-mascot)',
               }}
             >
               <div
@@ -549,7 +549,7 @@ export function Mascot({ rarity, isIndex }: MascotProps) {
                   borderRadius: 2,
                   position: 'absolute',
                   transform: 'translateX(-50%)',
-                  background: 'var(--color-border)',
+                  background: 'var(--color-border-mascot)',
                 }}
               />
 
@@ -582,7 +582,7 @@ export function Mascot({ rarity, isIndex }: MascotProps) {
                 height: 28,
                 borderRadius: 4,
                 position: 'absolute',
-                border: '2px solid var(--color-border)',
+                border: '2px solid var(--color-border-mascot)',
                 background: 'var(--color-surface-raised)',
               }}
             >
@@ -610,7 +610,7 @@ export function Mascot({ rarity, isIndex }: MascotProps) {
                 borderRadius: 2,
                 position: 'absolute',
                 background: 'var(--color-surface)',
-                border: '2px solid var(--color-border)',
+                border: '2px solid var(--color-border-mascot)',
               }}
             />
 
@@ -623,7 +623,7 @@ export function Mascot({ rarity, isIndex }: MascotProps) {
                 borderRadius: 2,
                 position: 'absolute',
                 background: 'var(--color-surface)',
-                border: '2px solid var(--color-border)',
+                border: '2px solid var(--color-border-mascot)',
               }}
             />
           </div>
