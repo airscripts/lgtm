@@ -1,6 +1,7 @@
 import type { Rarity } from '@/lib/lgtm';
 import type { CSSProperties } from 'react';
 import type { MascotContext } from '@/lib/mascot-lines';
+import { SETTINGS_KEY, loadSettings } from '@/lib/settings';
 import { pickLine, contextFromPath } from '@/lib/mascot-lines';
 import { useRef, useState, useEffect, useCallback, Fragment } from 'react';
 
@@ -315,6 +316,21 @@ function cursorStyle(visible: boolean): CSSProperties {
 }
 
 export function Mascot({ rarity, isIndex }: MascotProps) {
+  const [enabled, setEnabled] = useState(true);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setEnabled(loadSettings().mascot);
+
+    function onStorage(e: StorageEvent) {
+      if (e.key !== SETTINGS_KEY) return;
+      setEnabled(loadSettings().mascot);
+    }
+
+    window.addEventListener('storage', onStorage);
+    return () => window.removeEventListener('storage', onStorage);
+  }, []);
+
   const [pos, setPos] = useState<Pos>(() => {
     const saved = loadSavedPos();
     return saved && isPosInViewport(saved) ? saved : defaultPos();
@@ -498,6 +514,8 @@ export function Mascot({ rarity, isIndex }: MascotProps) {
 
   const bobY = prefersReducedMotion ? 0 : bobOffset(idleTick);
   const showCursor = isTalking && isStillTyping(shownLine, fullLine);
+
+  if (!enabled) return null;
 
   return (
     <Fragment>

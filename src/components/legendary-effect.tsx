@@ -1,8 +1,11 @@
 import { useEffect } from 'react';
 import confetti from 'canvas-confetti';
+import { loadSettings } from '@/lib/settings';
 
 export function LegendaryEffect() {
   useEffect(() => {
+    if (!loadSettings().confetti) return;
+
     confetti({
       spread: 90,
       particleCount: 120,

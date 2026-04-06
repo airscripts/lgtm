@@ -1,17 +1,33 @@
-import { useState } from 'react';
 import { PAGE_SIZE } from '@/lib/config';
+import { useState, useEffect } from 'react';
 import type { LGTMEntry } from '@/lib/lgtm';
 import { Pagination } from '@/components/pagination';
+import { SETTINGS_KEY, loadSettings } from '@/lib/settings';
 
 export type CategoryEntriesProps = {
   entries: LGTMEntry[];
 };
 
 export function CategoryEntries({ entries }: CategoryEntriesProps) {
+  const [pageSize, setPageSize] = useState(PAGE_SIZE);
   const [page, setPage] = useState(1);
-  const totalPages = Math.ceil(entries.length / PAGE_SIZE);
-  const start = (page - 1) * PAGE_SIZE;
-  const slice = entries.slice(start, start + PAGE_SIZE);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setPageSize(loadSettings().pageSize);
+
+    function onStorage(e: StorageEvent) {
+      if (e.key !== SETTINGS_KEY) return;
+      setPageSize(loadSettings().pageSize);
+    }
+
+    window.addEventListener('storage', onStorage);
+    return () => window.removeEventListener('storage', onStorage);
+  }, []);
+
+  const totalPages = Math.ceil(entries.length / pageSize);
+  const start = (page - 1) * pageSize;
+  const slice = entries.slice(start, start + pageSize);
 
   function handlePageChange(pageNumber: number) {
     setPage(pageNumber);
@@ -25,11 +41,8 @@ export function CategoryEntries({ entries }: CategoryEntriesProps) {
           <a
             key={entry.id}
             href={`/lgtm/${entry.id}`}
+            style={{ color: 'inherit', borderColor: 'var(--color-border)' }}
             className="flex items-start gap-4 py-4 border-b no-underline transition-colors duration-150"
-            style={{
-              color: 'inherit',
-              borderColor: 'var(--color-border)',
-            }}
           >
             <span
               className="flex-shrink-0 text-xs pt-[0.2rem] min-w-[2.5rem]"

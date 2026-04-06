@@ -1,0 +1,31 @@
+---
+import BaseLayout from '@/layouts/base-layout.astro';
+import { SettingsPanel } from '@/components/settings-panel';
+---
+
+<BaseLayout title="LGTM | Settings" description="Customize your LGTM experience.">
+  <div class="page-content">
+    <div class="container" style="padding-top: 3rem; padding-bottom: 4rem;">
+      <div style="max-width: 640px; margin-inline: auto;">
+        <div class="animate-up" style="margin-bottom: 2.5rem;">
+          <p
+            class="text-xs font-bold tracking-[0.1em] uppercase mb-2"
+            style="font-family: var(--font-mono); color: var(--color-accent);"
+          >
+            Preferences
+          </p>
+
+          <h1 class="text-3xl font-bold tracking-tight m-0 mb-2" style="color: var(--color-text);">Settings</h1>
+
+          <p class="m-0 text-[1.0625rem] leading-relaxed" style="color: var(--color-text-muted);">
+            Customize your LGTM experience. All preferences are saved locally in your browser.
+          </p>
+        </div>
+
+        <div class="animate-up-delay-1">
+          <SettingsPanel client:load />
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

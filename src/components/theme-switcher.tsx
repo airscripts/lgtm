@@ -35,10 +35,18 @@ export function ThemeSwitcher() {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setTheme(stored);
       applyTheme(stored);
-      return;
+    } else {
+      applyTheme('system');
     }
 
-    applyTheme('system');
+    function onStorage(e: StorageEvent) {
+      if (e.key !== THEME_STORAGE_KEY) return;
+      const next = (e.newValue as Theme | null) ?? 'system';
+      setTheme(isValidTheme(next, validValues) ? next : 'system');
+    }
+
+    window.addEventListener('storage', onStorage);
+    return () => window.removeEventListener('storage', onStorage);
   }, []);
 
   function cycle() {
@@ -48,10 +56,16 @@ export function ThemeSwitcher() {
     setTheme(next);
     applyTheme(next);
 
-    if (next === 'system') {
-      localStorage.removeItem(THEME_STORAGE_KEY);
-    } else {
-      localStorage.setItem(THEME_STORAGE_KEY, next);
+    try {
+      if (next === 'system') {
+        localStorage.removeItem(THEME_STORAGE_KEY);
+        window.dispatchEvent(new StorageEvent('storage', { key: THEME_STORAGE_KEY, newValue: null }));
+      } else {
+        localStorage.setItem(THEME_STORAGE_KEY, next);
+        window.dispatchEvent(new StorageEvent('storage', { key: THEME_STORAGE_KEY, newValue: next }));
+      }
+    } catch {
+      // Safeguard against localStorage access issues.
     }
   }
 
