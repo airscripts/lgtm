@@ -1,191 +1,475 @@
 # AGENTS.md
 
-This file defines the coding style, conventions, and architecture rules for this project.
-Follow these rules precisely and consistently. Do not deviate unless explicitly asked.
+## 1. Overview
 
----
+LGTM is a fully static Astro site that catalogs alternate meanings for the acronym "LGTM". The repo is built around Astro pages and layouts, React islands for client-side interactivity, and a build-time data layer sourced from `data/lgtm.json`. Most implementation code lives in TypeScript, with Astro components handling static page composition and a small amount of JavaScript config at the repo root.
 
-## General Philosophy
+## 2. Repository Structure
 
-- Write clean, minimal, readable code.
-- No unnecessary comments. Code should be self-explanatory.
-- No over-engineering. Solve the problem at hand, nothing more.
-- Never add unrequested code, files, refactors, or abstractions.
-- When in doubt, do less.
-- Use blank lines to separate logical blocks everywhere: between functions, between inner blocks inside a function, between switch cases, between groups of related statements. Breathing room is part of readability.
-- In arrays of objects or function calls, add a blank line between each entry only when the entries themselves are multiline. Single-line entries stay together with no blank lines between them.
-- In JSX, add a blank line between sibling elements at the same level (e.g. two `<span>` next to each other must have a blank line between them).
-- In JSX templates, avoid `if` statements and complex logic inline. Extract that logic into a named function and call it in the template instead.
-- Ternary operators are allowed in JSX for simple conditional rendering or conditional class/style values. For anything more complex, extract to a function.
-- Nested ternary chains (e.g. `a ? x : b ? y : c ? z : w`) are never allowed. Replace them with a lookup map (`Record<K, V>`) defined in the component's frontmatter or function body.
-- When a `style` prop object has two or more properties whose values depend on the same condition, extract the entire style object into a named function (e.g. `filterButtonStyle(active, color)`) that returns a `CSSProperties` object. Never scatter multiple ternaries on the same condition across adjacent style properties.
-- When a JSX map callback renders more than one element variant or contains non-trivial conditions, extract named predicate functions (e.g. `isLink`, `isLast`) into the frontmatter or component body. Each branch in the template must then be a simple `{condition && <element>}` — no inline ternaries between structurally different elements.
-- Complex conditions — those involving multiple boolean operators (`&&`, `||`), optional-chaining combined with other checks, repeated `?? fallback` patterns, or conditions whose intent is not immediately obvious — must be extracted into a named function with a descriptive name. The function name should make the intent self-evident without needing a comment.
-
----
-
-## Imports
-
-- Sort all import statements by **string length**, shortest first.
-- One import per line. No barrel-style inline grouping.
-- Separate third-party imports from internal imports with a blank line only when it significantly aids readability — otherwise keep them together sorted by length.
-- Use `@/` path aliases for internal imports.
-
-**Example:**
-
-```ts
-import { useState } from 'react';
-import { PAGE_SIZE } from '@/lib/config';
-import type { LGTMEntry } from '@/lib/lgtm';
-import { RARITY_LABELS } from '@/lib/lgtm';
-import { Pagination } from '@/components/pagination';
-import { CATEGORY_COLORS, RARITY_COLORS } from '@/lib/content';
+```text
+lgtm/
+  data/
+    lgtm.json                 # canonical content source
+  public/
+    favicon.svg
+    og-image.png
+  src/
+    components/               # Astro components and React islands
+      *.astro
+      *.tsx
+    layouts/
+      base-layout.astro       # shared shell, nav, footer, head tags
+    lib/                      # data access, config, settings, content helpers
+      config.ts
+      content.ts
+      lgtm.ts
+      mascot-lines.ts
+      random.ts
+      settings.ts
+    pages/                    # Astro routes, including dynamic pages
+      index.astro
+      browse.astro
+      random.astro
+      settings.astro
+      lgtm/[id].astro
+      categories/[category].astro
+      rarities/[rarity].astro
+    styles/
+      global.css              # Tailwind entry, tokens, shared utility classes
+    test/                     # Vitest files, setup, shared fixtures
+      fixtures.ts
+      setup.ts
+      *.test.ts
+      *.test.tsx
+  .github/workflows/          # build, test, verify pipelines
+  astro.config.mjs
+  eslint.config.mjs
+  package.json
+  tsconfig.json
+  vercel.json
+  vitest.config.ts
 ```
 
----
+- Put new static pages in `src/pages/`.
+- Put reusable non-interactive UI in `src/components/*.astro`.
+- Put client-side stateful UI in `src/components/*.tsx`.
+- Put build-time data access and pure helpers in `src/lib/`.
+- Put shared test factories and setup in `src/test/`.
+- Keep the repo root limited to project config, lockfiles, and top-level docs.
+- Do not add alternate data sources; `data/lgtm.json` remains the canonical content store.
 
-## Naming
+## 5. Commands and Workflows
 
-- **Variables and functions**: `camelCase`, always descriptive and concise.
-- **Types and interfaces**: `PascalCase`.
-- **Files and folders**: `kebab-case`.
-- **Test helpers/factories**: short, lowercase, meaningful (e.g. `makeEntry`).
-- Avoid abbreviations unless they are universally understood (e.g. `id`, `url`).
-- Boolean variables should read as a question: `isOpen`, `hasError`, `isAnimating`.
-- Hook files must be prefixed with `use-`: e.g. `use-entries.ts`.
+- Install dependencies with `pnpm install`.
+- Start local development with `pnpm dev`.
+- Build the static site with `pnpm build`.
+- Preview the production build with `pnpm preview`.
+- Run the full test suite with `pnpm test`.
+- Run tests in watch mode with `pnpm test:watch`.
+- Run coverage with `pnpm coverage`.
+- Lint source files with `pnpm lint`.
+- Autofix lint issues with `pnpm lint:fix`.
+- Reformat tracked source files with `pnpm format`.
+- Check formatting in CI style with `pnpm format:check`.
+- Run a typecheck with `pnpm exec tsc --noEmit`.
 
----
+## 6. Code Formatting
 
-## TypeScript
+### TypeScript
 
-- Always type props explicitly with a named `export type` above the component or function. In `.astro` files use `type Props` (not exported) directly above `Astro.props` destructuring.
-- Use `.d.ts` files for pure type definitions inside `types/`.
-- Prefer `type` over `interface` unless declaration merging is needed.
-- Do not use `any`. Use `unknown` and narrow when needed.
-- Do not add types that were not asked for or are not strictly necessary.
-- Use `import type` for type-only imports (enforced by ESLint).
+- Use 2-space indentation. Never use tabs.
 
----
+```typescript
+export function CountUp({ to, duration = 1400, className }: CountUpProps) {
+  const [value, setValue] = useState(0);
+  const ref = useRef<HTMLSpanElement>(null);
+  const started = useRef(false);
+}
+```
 
-## Astro
+- Keep most lines within the configured Prettier width of 120 characters. Config lives in `.prettierrc`.
+- Separate top-level declarations with one blank line.
 
-- `.astro` files are for static content. Use them for pages, layouts, and components that do not require client-side interactivity.
-- `.tsx` files are React islands. Use them only when client-side state, effects, or event handlers are needed. Mount them from `.astro` files using `client:load` (immediate) or `client:visible` (deferred until in viewport).
-- Every `.astro` component defines its props with `type Props` in the frontmatter. Destructure from `Astro.props` immediately after.
-- Lookup maps, predicate functions, and derived values belong in the frontmatter (`---` block), not inline in the template.
-- Use scoped `<style>` blocks inside `.astro` files for component-specific CSS that requires pseudo-selectors, keyframe animations, or media queries that Tailwind cannot express.
-- Dynamic routes live in `src/pages/` as `[param].astro` and always export `getStaticPaths`.
-- Inline event handlers in `.astro` templates (e.g. `onmouseover`, `onmouseout`) are acceptable for simple imperative style mutations that cannot be handled by Tailwind hover utilities.
+```typescript
+function hasTags(entry: LGTMEntry): boolean {
+  return (entry.tags?.length ?? 0) > 0;
+}
 
-**Example `.astro` component structure:**
+function cardStyle(isAnimating: boolean, rarityColor: string): CSSProperties {
+  return {
+    opacity: isAnimating ? 0 : 1,
+  };
+}
+```
+
+- Separate statements inside functions with blank lines when switching logical blocks.
+
+```typescript
+function toggleCategory(category: string) {
+  setActiveCategories((prev) => {
+    const next = new Set(prev);
+
+    if (next.has(category)) {
+      next.delete(category);
+    } else {
+      next.add(category);
+    }
+
+    return next;
+  });
+
+  setPage(1);
+}
+```
+
+- End every file with a trailing newline.
+- Strip trailing whitespace.
+- Use single quotes for strings.
+
+```typescript
+export const SETTINGS_KEY = 'lgtm-settings';
+```
+
+- Keep opening braces on the same line as declarations and control flow.
+- Put a space around `=` and binary operators.
+- Do not put spaces inside parentheses or brackets.
+- Put one space after each comma.
+- In object literals, place one space after each colon.
+- Use one import per line.
+- Use trailing commas in multi-line arrays, objects, parameters, and arguments.
+
+```typescript
+const THEMES: { value: Theme; icon: () => ReactElement; label: string }[] = [
+  { value: 'system', icon: () => <Monitor size={18} aria-hidden="true" />, label: 'System theme' },
+  { value: 'light', icon: () => <Sun size={18} aria-hidden="true" />, label: 'Light theme' },
+  { value: 'dark', icon: () => <Moon size={18} aria-hidden="true" />, label: 'Dark theme' },
+];
+```
+
+- Continue long expressions with implicit wrapping, not backslashes.
+- Always terminate statements with semicolons.
+- Let Prettier format TS and TSX files; the active config is `.prettierrc`.
+
+### Astro
+
+- Use 2-space indentation in frontmatter, markup, and scoped styles.
+- Keep frontmatter imports and derived values at the top, then render markup below the closing `---`.
 
 ```astro
 ---
-import { RARITY_LABELS } from '@/lib/lgtm';
-import type { LGTMEntry } from '@/lib/lgtm';
+import { getAllEntries } from '@/lib/lgtm';
+import BaseLayout from '@/layouts/base-layout.astro';
+import { BrowseFilters } from '@/components/browse-filters';
 
-type Props = {
-  entry: LGTMEntry;
-  variant?: 'default' | 'compact';
-};
-
-const { entry, variant = 'default' } = Astro.props;
-
-const variantPadding = {
-  default: 'p-6',
-  compact: 'py-4 px-5',
-}[variant];
-
-function showTags(): boolean {
-  return variant !== 'compact' && (entry.tags?.length ?? 0) > 0;
-}
+const entries = getAllEntries();
 ---
-
-<article class={`... ${variantPadding}`}>...</article>
 ```
 
----
+- Use single quotes in frontmatter strings and in inline event handler strings.
+- Use one blank line between major blocks in templates.
+- Keep attributes split across lines once an element becomes dense.
 
-## React Islands
+```astro
+<BaseLayout
+  title="LGTM | Browse All Meanings"
+  description={`All ${entries.length} alternative meanings of LGTM, filterable by category, rarity, and searchable by keyword.`}
+>
+```
 
-- Use **named exports** for components: `export function MyComponent`.
-- Export the prop type above the component: `export type MyComponentProps = { ... }`.
-- Keep components focused and small. Split into dedicated files when a component grows.
-- Internal helper functions (e.g. style factories, predicates) should be defined at module level if they do not close over component state, or inside the component if small and component-specific.
-- Use early returns inside handlers to avoid nesting.
-- Do not leave unused state, props, or imports.
-- Sort JSX attributes by **string length**, shortest first, same rule as imports. Multiline attributes (i.e. attributes whose value spans multiple lines, like object literals or multiline arrow functions) always go last, after all single-line attributes, regardless of their length.
+- Use inline imperative handlers in markup when hover behavior is expressed directly on the element.
 
-**Example structure:**
+```astro
+<a
+  href="/browse"
+  style="color: var(--color-text-muted);"
+  onmouseout="this.style.color='var(--color-text-muted)';this.style.background='';"
+  onmouseover="this.style.color='var(--color-text)';this.style.background='var(--color-surface-raised)';"
+>
+```
 
-```tsx
-import { useState } from 'react';
-import type { CSSProperties } from 'react';
-import { PAGE_SIZE } from '@/lib/config';
-import type { LGTMEntry } from '@/lib/lgtm';
+- Let Prettier with `prettier-plugin-astro` format `.astro` files.
 
-export type MyComponentProps = {
+### JavaScript Config
+
+- Use 2-space indentation and single quotes in root config files.
+- Keep imports one per line and end statements with semicolons.
+
+```javascript
+import react from '@astrojs/react';
+import vercel from '@astrojs/vercel';
+import { defineConfig } from 'astro/config';
+import tailwindcss from '@tailwindcss/vite';
+```
+
+## 7. Naming Conventions
+
+### TypeScript
+
+- Use `camelCase` for variables, helper functions, and handlers.
+
+```typescript
+function applyTheme(theme: Theme) {
+  const root = document.documentElement;
+}
+```
+
+- Use boolean names that read like predicates.
+
+```typescript
+function isValidPageSize(value: unknown): value is PageSize {
+  return VALID_PAGE_SIZES.includes(value as PageSize);
+}
+```
+
+- Use `PascalCase` for exported React components and type aliases.
+
+```typescript
+export type RandomGeneratorProps = {
   entries: LGTMEntry[];
 };
 
-function itemStyle(active: boolean): CSSProperties {
-  return {
-    color: active ? 'var(--color-accent)' : 'var(--color-text-muted)',
-    background: active ? 'var(--color-surface-raised)' : 'var(--color-surface)',
-  };
-}
+export function RandomGenerator({ entries, initialEntry }: RandomGeneratorProps) {
+```
 
-export function MyComponent({ entries }: MyComponentProps) {
-  // state
-  // derived values
-  // handlers
-  // return JSX
+- Use `SCREAMING_SNAKE_CASE` for exported constants and lookup maps that behave like constants.
+
+```typescript
+export const RARITY_WEIGHTS: Record<Rarity, number> = {
+  common: 60,
+  rare: 30,
+  epic: 15,
+  legendary: 5,
+};
+```
+
+- Use kebab-case for filenames in `src/components/`, `src/lib/`, and `src/pages/`.
+- Name React prop types with a `Props` suffix.
+- Name test factories as short verbs such as `makeEntry`.
+- Name test files as `<module>.test.ts` or `<module>.test.tsx`.
+
+### Astro
+
+- Use `type Props` for component props in frontmatter.
+
+```astro
+type Props = {
+  href?: string;
+  category: string;
+  size?: 'sm' | 'md';
+};
+```
+
+- Name derived template values descriptively, often by UI role.
+
+```astro
+const rarityBadgeSizeClasses = {
+  sm: 'text-[0.6875rem] py-[0.2em] px-[0.5em] rounded',
+  md: 'text-[0.75rem] py-[0.3em] px-[0.65em] rounded-md',
+  lg: 'text-[0.875rem] py-[0.4em] px-[0.85em] rounded-lg',
+}[badgeSize];
+```
+
+## 8. Type Annotations
+
+### TypeScript
+
+- Type exported props and exported domain shapes explicitly with `type`.
+
+```typescript
+export type LGTMEntry = {
+  id: number;
+  rarity: Rarity;
+  meaning: string;
+  tags?: string[];
+  created_at?: string;
+  description?: string;
+  category: Category | string;
+};
+```
+
+- Type React props on exported components.
+- Use explicit return types on many small helpers, especially predicates and formatters.
+
+```typescript
+function matchesSearch(entry: LGTMEntry, query: string): boolean {
+  return (
+    entry.meaning.toLowerCase().includes(query) ||
+    (entry.description?.toLowerCase().includes(query) ?? false) ||
+    (entry.tags?.some((tag) => tag.toLowerCase().includes(query)) ?? false)
+  );
 }
 ```
 
----
+- Use `unknown` for untrusted data before narrowing.
 
-## Styling
+```typescript
+function isValidSettings(value: unknown): value is Partial<Settings> {
+  if (typeof value !== 'object' || value === null) return false;
+  return true;
+}
+```
 
-Apply styles in this order of preference — use the first option that solves the problem:
+- Use built-in utility types like `Record` and `Partial` instead of interfaces.
+- Use union literals for constrained values such as theme modes and page sizes.
+- Use `import type` when the import is type-only. ESLint enforces this in `eslint.config.mjs`.
+- Treat the repo as strict TypeScript via `astro/tsconfigs/strict` in `tsconfig.json`.
 
-1. **Tailwind utility classes** — always try Tailwind first.
-2. **Global CSS classes** (`.btn`, `.btn-primary`, `.btn-ghost`, `.badge-*`, `.container`) — check `src/styles/global.css` before writing new classes.
-3. **Scoped `<style>` blocks** in `.astro` files — for pseudo-selectors, keyframes, or media queries Tailwind cannot handle.
-4. **Inline `style` prop with `var(--token)`** — only for dynamic or condition-driven values (e.g. a color driven by data, hover state toggled imperatively).
+### Astro
 
-CSS design tokens are defined in `src/styles/global.css` under `@theme {}`. Always reference them as `var(--color-*)`, `var(--font-*)` etc. Do not hardcode color values that have a corresponding token.
+- Type component props in frontmatter with `type Props`.
+- Use local helper return types when they clarify rendering predicates.
 
-Never define a new global CSS class without first checking whether an existing class or Tailwind utility combination covers the need.
+```astro
+function showTags(): boolean {
+  return variant !== 'compact' && (entry.tags?.length ?? 0) > 0;
+}
+```
 
----
+## 9. Imports
 
-## Data Layer
+### TypeScript
 
-- The sole data source is `data/lgtm.json`. There is no backend, API, or database.
-- Never import `data/lgtm.json` directly from a component or page. All data access goes through the functions exported from `src/lib/lgtm.ts` (`getAllEntries`, `getEntryById`, `getEntriesByCategory`, etc.).
-- Data is loaded at build time only — there are no runtime data fetches.
+- Keep one import per line.
+- Place relative or aliased local imports after package imports.
+- Use `@/` aliases for source imports rooted in `src/`.
+- Use `import type` for type-only imports.
+- Do not use wildcard imports.
+- Keep complete import blocks compact; blank lines appear only when the file clearly separates groups.
 
----
+```typescript
+import type { Rarity } from '@/lib/lgtm';
+import type { CSSProperties } from 'react';
+import type { MascotContext } from '@/lib/mascot-lines';
+import { SETTINGS_KEY, loadSettings } from '@/lib/settings';
+import { pickLine, contextFromPath } from '@/lib/mascot-lines';
+import { useRef, useState, useEffect, useCallback, Fragment } from 'react';
+```
 
-## Testing
+### Astro
 
-- Use **Vitest**: `describe`, `test`, `expect`, `vi`, `beforeEach`.
-- Import order follows the same length-sorting rule.
-- Use `beforeEach(() => { vi.clearAllMocks(); })` in every describe block.
-- Test descriptions follow the pattern: `'should [do something]'` and `'should throw if [something] fails'`. Always fully lowercase — no uppercase anywhere in the description, including acronyms (e.g. `'should return the entry id'`, not `'should return the entry ID'`).
-- Use the `makeEntry(overrides?)` factory from `src/test/fixtures.ts` to create test entries — do not repeat object literals inline.
-- Fixtures live in `src/test/fixtures.ts` and are imported as named exports.
-- Test files live in `src/test/` and follow the glob `src/test/**/*.test.{ts,tsx}`.
-- Group tests with `describe('feature', () => { ... })`. Nest a second `describe` level only when a file tests multiple distinct functions.
-- Every happy path test has a corresponding failure test.
+- Keep aliased component and lib imports in frontmatter.
+- Use `import type` for source-only types.
 
-**Example:**
+```astro
+import { SITE_URL } from '@/lib/config';
+import type { LGTMEntry } from '@/lib/lgtm';
+import BaseLayout from '@/layouts/base-layout.astro';
+import { getAllEntries, RARITY_LABELS } from '@/lib/lgtm';
+import BreadcrumbBar from '@/components/breadcrumb-bar.astro';
+```
 
-```ts
-import { makeEntry } from '@/test/fixtures';
+### JavaScript Config
+
+- Keep package imports only; root config files do not use path aliases.
+
+```javascript
+import js from '@eslint/js';
+import tseslint from 'typescript-eslint';
+import astroPlugin from 'eslint-plugin-astro';
+import reactHooksPlugin from 'eslint-plugin-react-hooks';
+```
+
+## 10. Error Handling
+
+### TypeScript
+
+- Use `try`/`catch` only around browser APIs that can fail at runtime, especially `localStorage`, clipboard access, JSON parsing, and DOM APIs.
+- Swallow these failures quietly when the UI has a safe fallback.
+- Do not log before returning fallback values; the existing code favors silent degradation.
+- Do not throw custom exceptions; there is no custom exception layer in this repo.
+- Use early returns inside storage event handlers and guards.
+
+```typescript
+export function loadSettings(): Settings {
+  try {
+    const raw = localStorage.getItem(SETTINGS_KEY);
+    if (!raw) return { ...DEFAULT_SETTINGS };
+
+    const parsed: unknown = JSON.parse(raw);
+    if (!isValidSettings(parsed)) return { ...DEFAULT_SETTINGS };
+  } catch {
+    return { ...DEFAULT_SETTINGS };
+  }
+}
+```
+
+```typescript
+const handleCopy = async () => {
+  try {
+    await navigator.clipboard.writeText(shareUrl);
+  } catch {
+    const input = document.createElement('input');
+    input.value = shareUrl;
+  }
+};
+```
+
+### Astro
+
+- Keep defensive `try`/`catch` blocks only inside inline scripts that touch browser storage before hydration.
+
+```astro
+try {
+  const theme = localStorage.getItem(THEME_STORAGE_KEY);
+
+  if (theme === 'light' || theme === 'dark') {
+    document.documentElement.setAttribute('data-theme', theme);
+  }
+} catch {
+  // Safeguard against localStorage access issues (e.g. private mode, disabled storage).
+}
+```
+
+## 11. Comments and Docstrings
+
+### TypeScript
+
+- Do not add docstrings. The repo does not use JSDoc or module docblocks in source files.
+- Use inline comments sparingly, mainly for linter suppressions or concise safeguard notes around browser edge cases.
+- Place explanatory comments directly above the statement they qualify or as the only line in a `catch` block.
+- Do not comment obvious business logic.
+
+```typescript
+useEffect(() => {
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+}, []);
+```
+
+```typescript
+} catch {
+  // Safeguard against localStorage access issues.
+}
+```
+
+### Astro
+
+- Do not add template comments for obvious structure.
+- Keep comments limited to defensive inline script notes when the failure mode is not obvious.
+
+```astro
+} catch {
+  // Safeguard against localStorage access issues or invalid JSON.
+}
+```
+
+## 12. Testing
+
+> **Repo-wide:** Tests live in `src/test/` and target source modules from `src/components/` and `src/lib/`.
+
+### Vitest
+
+- Use Vitest with jsdom and React Testing Library. Config lives in `vitest.config.ts`.
+- Run the full suite with `pnpm test`.
+- Name files as `src/test/<module>.test.ts` or `src/test/<module>.test.tsx`.
+- Group coverage with `describe(...)` blocks and `test(...)` cases.
+- Use lowercase `should ...` descriptions.
+- Clear mocks in setup hooks with `vi.clearAllMocks()`.
+- Use `src/test/fixtures.ts` for shared entry creation.
+- Use `src/test/setup.ts` for shared test runtime setup.
+
+```typescript
+import type { Rarity } from '@/lib/lgtm';
 import { describe, test, expect, vi, beforeEach } from 'vitest';
-import { getEntryById, getAllEntries } from '@/lib/lgtm';
 
 describe('get entry by id', () => {
   beforeEach(() => {
@@ -197,46 +481,71 @@ describe('get entry by id', () => {
     expect(entry).toBeDefined();
     expect(entry!.id).toBe(1);
   });
-
-  test('should return undefined for unknown id', () => {
-    expect(getEntryById(9999)).toBeUndefined();
-  });
 });
 ```
 
----
-
-## Folder Structure
-
-```
-lgtm/
-├── data/             # Raw data source (lgtm.json) — read-only at runtime
-├── public/           # Static assets (favicon, etc.)
-├── src/
-│   ├── components/   # .astro static components and .tsx React islands
-│   ├── layouts/      # Shared HTML shells (base-layout.astro)
-│   ├── lib/          # config.ts, lgtm.ts, content.ts, random.ts, helpers
-│   ├── pages/        # Astro file-based routes (index, browse, lgtm/, categories/, rarities/)
-│   ├── styles/       # global.css (Tailwind v4 entry + CSS design tokens)
-│   └── test/         # fixtures.ts, setup.ts, *.test.{ts,tsx}
-├── astro.config.mjs
-├── tsconfig.json
-├── vitest.config.ts
-└── package.json
+```typescript
+export function makeEntry(overrides: Partial<LGTMEntry> = {}): LGTMEntry {
+  return {
+    id: 1,
+    category: 'nerd',
+    rarity: 'common',
+    ...overrides,
+  };
+}
 ```
 
----
+## 13. Git
 
-## What NOT to Do
+> **Repo-wide:** Commit subjects use a prefix, a colon, and a short imperative summary.
 
-- Do not add comments explaining what the code does.
-- Do not add `console.log` statements.
-- Do not create extra abstraction layers that were not asked for.
-- Do not refactor files that are not part of the current task.
-- Do not change import style, formatting, or naming in files you are only partially editing.
-- Do not use default exports.
-- Do not sort imports alphabetically — sort by string length.
-- Do not add `index.ts` barrel files unless explicitly asked.
-- Do not drop into plain CSS for a styling problem if it can be solved with Tailwind utility classes. Always try Tailwind first.
-- Do not import `data/lgtm.json` directly — always go through `src/lib/lgtm.ts`.
-- Do not add `'use client'` to `.tsx` files — this is an Astro project, not Next.js, and the directive has no effect here.
+- Use `feat:` for new end-user functionality or new content capabilities.
+- Use `fix:` for behavior corrections and regressions.
+- Use `refactor:` for internal restructures that do not change behavior.
+- Use `chore:` for maintenance and repository upkeep.
+- Use `ci:` for workflow and automation changes.
+- Use `test:` for test-only changes.
+- Use `repo:` for foundational repository setup work.
+- Do not use scoped commit prefixes like `feat(ui):`; the observed history uses unscoped prefixes.
+- Keep branch names prefixed by work type, such as `feat/`, `fix/`, `chore/`, or `test/`.
+- Keep commit subjects short and single-line; the existing history does not rely on commit bodies.
+- Preserve signed commits when working in the existing history style.
+- Expect a rebase-style history; merge commits are absent from the current log.
+
+## 14. Dependencies and Tooling
+
+### TypeScript and Astro
+
+- Use `pnpm` as the package manager. The repo pins `pnpm@10.7.0` in `package.json`.
+- Keep `pnpm-lock.yaml` committed.
+- Add a runtime or development dependency with `pnpm add <package>` or `pnpm add -D <package>`.
+- Use Prettier for formatting. Config lives in `.prettierrc`.
+- Use ESLint for linting. Config lives in `eslint.config.mjs`.
+- Use Astro strict TypeScript config through `tsconfig.json`.
+- Use Vitest for tests through `vitest.config.ts`.
+- Use Astro plus `@astrojs/react` for React islands, `@tailwindcss/vite` for Tailwind integration, and `@astrojs/vercel` for static deployment.
+- Keep workflow updates in `.github/workflows/build.yml`, `.github/workflows/test.yml`, and `.github/workflows/verify.yml` when commands change.
+
+### JavaScript Config
+
+- Keep root config files in ESM format with `type: "module"` from `package.json`.
+- Update `astro.config.mjs`, `eslint.config.mjs`, or `vitest.config.ts` directly when build or tooling behavior changes.
+
+## 15. Red Lines
+
+- Never switch the repo to `npm` or `yarn`; use `pnpm` commands and keep `pnpm-lock.yaml`.
+- Never use double quotes in TypeScript, Astro frontmatter, or root config files unless the file already requires a different quoting context.
+- Never omit semicolons in TS, TSX, or JS config files.
+- Never use tabs for indentation.
+- Never import source modules with long relative climbs when an `@/` alias fits.
+- Never fetch LGTM data at runtime; read it from `src/lib/lgtm.ts` at build time.
+- Never move interactive stateful UI into `.astro` when the current pattern calls for a React island.
+- Never add a new data source or backend layer for entries without changing the project architecture intentionally.
+- Never introduce `any` when `unknown`, unions, or concrete types can express the shape.
+- Never add JSDoc blocks or explanatory comments to ordinary app logic.
+- Never use `console.log` as part of normal implementation or tests.
+- Never add wildcard imports.
+- Never write test descriptions with title case or sentence case; keep them in lowercase `should ...` form.
+- Never duplicate inline LGTM entry objects in tests when `makeEntry(...)` can express the fixture.
+- Never commit workflow changes without keeping `build`, `test`, and `verify` aligned with the actual package scripts.
+- Never use scoped commit prefixes like `feat(ui):`; keep the existing unscoped `feat:`, `fix:`, `refactor:`, `chore:`, `ci:`, `test:`, or `repo:` pattern.
